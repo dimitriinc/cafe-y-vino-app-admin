@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:paddingEnd="30dp"
+    android:paddingBottom="30dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:background="@drawable/shape_rectangular"
+    tools:ignore="RtlSymmetry">
+
+    <TextView
+        android:id="@+id/txtSumToDivide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_centerHorizontal="true"
+        android:padding="30dp"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="20dp"
+        android:fontFamily="@font/andada"
+        tools:text="100"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtEfectivoDivide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtSumToDivide"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/andada"
+        android:layout_marginEnd="20dp"
+        android:padding="10dp"
+        android:text="@string/efectivo"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toStartOf="@+id/edtEfectivo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSumToDivide" />
+
+    <EditText
+        android:id="@+id/edtEfectivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtEfectivoDivide"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/shape_for_et"
+        android:fontFamily="@font/andada"
+        android:hint="@string/monto"
+        android:inputType="numberDecimal"
+        android:padding="10dp"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtEfectivoDivide"
+        app:layout_constraintEnd_toStartOf="@+id/txtEffectivoOk"
+        app:layout_constraintTop_toTopOf="@+id/txtEfectivoDivide" />
+
+    <TextView
+        android:id="@+id/txtVisaDivide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtEfectivo"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:fontFamily="@font/andada"
+        android:layout_marginTop="10dp"
+        android:text="@string/pos"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtEfectivoDivide" />
+
+    <EditText
+        android:id="@+id/edtVisa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtVisaDivide"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/shape_for_et"
+        android:fontFamily="@font/andada"
+        android:hint="@string/monto"
+        android:inputType="numberDecimal"
+        android:padding="10dp"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtVisaDivide"
+        app:layout_constraintEnd_toStartOf="@+id/txtEffectivoOk"
+        app:layout_constraintTop_toTopOf="@+id/txtVisaDivide"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/txtYapeDivide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/andada"
+        android:layout_below="@id/edtVisa"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/yape"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtVisaDivide" />
+
+    <EditText
+        android:id="@+id/edtYape"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtYapeDivide"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/shape_for_et"
+        android:fontFamily="@font/andada"
+        android:hint="@string/monto"
+        android:inputType="numberDecimal"
+        android:padding="10dp"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtYapeDivide"
+        app:layout_constraintEnd_toStartOf="@+id/txtYapeOk"
+        app:layout_constraintTop_toTopOf="@+id/txtYapeDivide"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/txtCriptoDivide"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/andada"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtYape"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="@string/cripto"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtYapeDivide" />
+
+    <EditText
+        android:id="@+id/edtCripto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtCriptoDivide"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/shape_for_et"
+        android:fontFamily="@font/andada"
+        android:hint="@string/monto"
+        android:inputType="numberDecimal"
+        android:padding="10dp"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtCriptoDivide"
+        app:layout_constraintEnd_toStartOf="@+id/txtCriptoOk"
+        app:layout_constraintTop_toTopOf="@+id/txtCriptoDivide"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnListo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtCripto"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:fontFamily="@font/andada"
+        android:padding="10dp"
+        android:text="@string/listo"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtSumToDivide"
+        app:layout_constraintStart_toStartOf="@+id/txtSumToDivide"
+        app:layout_constraintTop_toBottomOf="@+id/txtCriptoDivide" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnListo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_reset"
+        app:layout_constraintEnd_toEndOf="@+id/btnListo"
+        app:layout_constraintStart_toStartOf="@+id/btnListo"
+        app:layout_constraintTop_toBottomOf="@+id/btnListo"
+        app:maxImageSize="40dp" />
+
+    <TextView
+        android:id="@+id/txtVisaOk"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_round_txt"
+        android:fontFamily="@font/andada"
+        android:gravity="center"
+        android:text="V"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/edtVisa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtVisa" />
+
+    <TextView
+        android:id="@+id/txtEffectivoOk"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_round_txt"
+        android:fontFamily="@font/andada"
+        android:gravity="center"
+        android:text="V"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/edtEfectivo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtEfectivo" />
+
+    <TextView
+        android:id="@+id/txtYapeOk"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_round_txt"
+        android:fontFamily="@font/andada"
+        android:gravity="center"
+        android:text="V"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/edtYape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtYape" />
+
+    <TextView
+        android:id="@+id/txtCriptoOk"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_round_txt"
+        android:fontFamily="@font/andada"
+        android:gravity="center"
+        android:text="V"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/edtCripto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtCripto" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

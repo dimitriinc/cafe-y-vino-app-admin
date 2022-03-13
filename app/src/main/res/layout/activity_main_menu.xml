@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainMenuActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtPlatos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Platos"
+        tools:layout_editor_absoluteX="155dp"
+        tools:layout_editor_absoluteY="117dp"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:textSize="35sp"
+        android:fontFamily="@font/amatic_sc_bold"/>
+
+    <TextView
+        android:id="@+id/txtPiqueos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Piqueos"
+        tools:layout_editor_absoluteX="193dp"
+        tools:layout_editor_absoluteY="505dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:textSize="35sp" />
+
+    <TextView
+        android:id="@+id/txtVinos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vinos"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="194dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:textSize="35sp"/>
+
+    <TextView
+        android:id="@+id/txtCocteles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cócteles"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="282dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:textSize="35sp"
+        android:fontFamily="@font/amatic_sc_bold"/>
+
+    <TextView
+        android:id="@+id/txtCervezas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cervezas"
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="367dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:textSize="35sp"
+        android:fontFamily="@font/amatic_sc_bold"/>
+
+    <TextView
+        android:id="@+id/txtBebidasCalientes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bebidas Calientes"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="427dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:textSize="35sp"/>
+
+
+
+    <TextView
+        android:id="@+id/txtOfertas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ofertas"
+        tools:layout_editor_absoluteX="190dp"
+        tools:layout_editor_absoluteY="602dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:textSize="35sp"/>
+
+    <TextView
+        android:id="@+id/txtRegalos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Regalos"
+        tools:layout_editor_absoluteX="190dp"
+        tools:layout_editor_absoluteY="602dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:textSize="35sp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabConsumoTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="15dp"
+        app:srcCompat="@drawable/ic_canasta" />
+</LinearLayout>

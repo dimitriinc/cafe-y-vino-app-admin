@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainMenuActivity">
+
+    <TextView
+        android:id="@+id/txtPlatos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Platos"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtPiqueos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Piqueos"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtPlatos"
+        app:layout_constraintStart_toStartOf="@+id/txtPlatos"
+        app:layout_constraintTop_toBottomOf="@+id/txtPlatos" />
+
+    <TextView
+        android:id="@+id/txtVinos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Vinos"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtPlatos"
+        app:layout_constraintStart_toStartOf="@+id/txtPlatos"
+        app:layout_constraintTop_toBottomOf="@+id/txtPiqueos" />
+
+    <TextView
+        android:id="@+id/txtCocteles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Cócteles"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtPlatos"
+        app:layout_constraintStart_toStartOf="@+id/txtPlatos"
+        app:layout_constraintTop_toBottomOf="@+id/txtVinos" />
+
+
+    <TextView
+        android:id="@+id/txtCervezas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="120dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Cervezas"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtBebidasCalientes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Bebidas Calientes"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtCervezas"
+        app:layout_constraintStart_toStartOf="@+id/txtCervezas"
+        app:layout_constraintTop_toBottomOf="@+id/txtCervezas" />
+
+    <TextView
+        android:id="@+id/txtOfertas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Ofertas"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtBebidasCalientes"
+        app:layout_constraintStart_toStartOf="@+id/txtBebidasCalientes"
+        app:layout_constraintTop_toBottomOf="@+id/txtBebidasCalientes" />
+
+    <TextView
+        android:id="@+id/txtRegalos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Regalos"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtBebidasCalientes"
+        app:layout_constraintStart_toStartOf="@+id/txtBebidasCalientes"
+        app:layout_constraintTop_toBottomOf="@+id/txtOfertas" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="481dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabConsumoTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_canasta" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

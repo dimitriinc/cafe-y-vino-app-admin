@@ -1,0 +1,99 @@
+<resources>
+
+    // system ones
+    <string name="app_name">Administrador</string>
+    <string name="title_activity_cocteles">CoctelesActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+
+    <string name="pedido">pedido</string>
+    <string name="pedidos">pedidos</string>
+    <string name="pedidos_enviados">pedidos enviados del %1$s</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="agregar">Agregar</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="no_comment">sin comentario</string>
+    <string name="fcm_id">%1$s@fcm.googleapis.com</string>
+    <string name="cuenta_cancelada">Cuenta pagada - Mesa %1$s</string>
+    <string name="ver">Ver</string>
+    <string name="nuevo_pedido">Nuevo pedido - Mesa %1$s</string>
+    <string name="asignar_mesa">Asignar una mesa</string>
+    <string name="usarios_no_mesa">El campo está vacio</string>
+
+    <string name="email">email</string>
+    <string name="contraseña">contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="login">Login</string>
+    <string name="llenar_los_campos">Llenar los campos</string>
+    <string name="eror">Eror: %1$s</string>
+    <string name="omitir">Omitir</string>
+    <string name="password_length">La conraseña debe ser 6 signos o más</string>
+    <string name="eliminar_question">Eliminar?</string>
+    <string name="nombre">Nombre</string>
+    <string name="pedido_item_title">%1$s - mesa %2$s</string>
+    <string name="enviar">Enviar</string>
+    <string name="entrada_a_medida">La reserva fue creada a medida</string>
+    <string name="mesa_blocked">La mesa pertenece a un usuario de la app</string>
+    <string name="gift_item">%1$s\n%2$s - Mesa %3$s</string>
+
+    // for notifications
+    <string name="puerta_title">Solicitud de entrada</string>
+    <string name="puerta_message">%1$s queire entrar</string>
+    <string name="regalo_title">Pedido de regalo - Mesa %1$s</string>
+    <string name="pedido_title">%1$s - Mesa %2$s</string>
+    <string name="pagado_message">%1$s en la mesa %2$s ha pagado por su cuenta\n\tMonto: %3$s soles</string>
+    <string name="pedido_message">%1$s en la mesa %2$s ha enviado un pedido</string>
+    <string name="regalo_message">%1$s para %2$s en la mesa %3$s</string>
+    <string name="cuenta_big_text">%1$s en la mesa %2$s quiere cancelar con %3$s</string>
+    <string name="cuenta_title">Cancelación con %1$s - Mesa %2$s</string>
+    <string name="noti_collapsed">Nueva solicitud de reserva</string>
+    <string name="reserva_nombre">Nombre:  </string>
+    <string name="reserva_hora">Hora:  </string>
+    <string name="reserva_pax">Pax:  </string>
+    <string name="reserva_fecha">Fecha:  </string>
+    <string name="reserva_comentario">Comentario:  </string>
+    <string name="reserva_telefono">Teléfono:  </string>
+    <string name="reserva_mesa">Mesa:  </string>
+    <string name="puerta_update">El usario es aceptado</string>
+    <string name="puerta_input">Asignar una mesa</string>
+    <string name="puerta_update_title">Solicitud de entrada de %1$s</string>
+    <string name="puerta_update_text">Formato equivocado, utiliza las cifras</string>
+    <string name="reserva_rechazo">El rechazo está enviado</string>
+    <string name="reserva_acepto">El mensaje está enviado</string>
+    <string name="cuentas_canceladas">cuentas canceladas del %1$s</string>
+    <string name="buscar">Buscar</string>
+    <string name="id_email_title">%1$s\n%2$s</string>
+
+    // alert dialogs
+    <string name="btn_cocina">Cocina</string>
+    <string name="btn_barra">Barra</string>
+    <string name="mensaje">mensaje</string>
+    <string name="enviar_mensaje">Enviar mensaje</string>
+    <string name="rejection_hint">un comentario</string>
+    <string name="msg_to_client_hint">mensaje</string>
+    <string name="new_mesa_hint">nueva mesa</string>
+    <string name="history">Ver su historia de consumo</string>
+    <string name="cambiar">Cambiar mesa</string>
+    <string name="llegado">Llegado</string>
+    <string name="salido">Salido</string>
+    <string name="ingreso_total">Total:</string>
+    <string name="efectivo">Efectivo</string>
+    <string name="pos">Visa</string>
+    <string name="yape">Yape</string>
+    <string name="cripto">Cripto</string>
+    <string name="ingreso_efectivo">Efectivo:</string>
+    <string name="ingreso_pos">Visa:</string>
+    <string name="ingreso_yape">Yape:</string>
+    <string name="ingreso_cripto">Cripto:</string>
+    <string name="divide">Dividir</string>
+    <string name="monto">monto</string>
+    <string name="listo">Listo</string>
+    <string name="error">Algo no está correcto</string>
+
+
+</resources>

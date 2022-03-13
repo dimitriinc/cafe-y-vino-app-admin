@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rectangular">
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_for_et"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:id="@+id/edtEmailLogin"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:layout_marginHorizontal="10dp"
+        android:padding="10dp"/>
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtEmailLogin"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape_for_et"
+        android:layout_marginTop="15dp"
+        android:padding="10dp"
+        android:hint="@string/contraseña"
+        android:layout_marginHorizontal="10dp"
+        android:inputType="textPassword"
+        android:id="@+id/edtPasswordLogin"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/edtPasswordLogin"
+        android:layout_marginVertical="10dp"
+        android:text="@string/login"
+        android:id="@+id/btnLogin"/>
+
+</RelativeLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp"
+    android:layout_margin="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_for_et">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Molly Millions"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:fontFamily="@font/andada"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txtUsarioNombre"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:padding="5dp"
+            android:layout_below="@+id/txtUsarioNombre"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:fontFamily="@font/andada"
+            android:id="@+id/txtUsarioMesa"
+            android:layout_margin="5dp"/>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

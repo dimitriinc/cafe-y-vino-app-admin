@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/txtNotiFecha"
+        android:layout_toEndOf="@+id/txtNotiFechaLabel"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserva_fecha"
+        android:id="@+id/txtNotiFechaLabel"
+        android:layout_marginStart="10dp"
+        style="@style/TextAppearance.Compat.Notification.Info"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/txtNotiNombre"
+        android:layout_toEndOf="@+id/txtNotiNombreLabel"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_below="@+id/txtNotiFecha"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserva_nombre"
+        android:id="@+id/txtNotiNombreLabel"
+        android:layout_marginStart="10dp"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_below="@+id/txtNotiFechaLabel"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/txtNotiHora"
+        android:layout_toEndOf="@+id/txtNotiHoraLabel"
+        android:layout_below="@+id/txtNotiNombre"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserva_hora"
+        android:id="@+id/txtNotiHoraLabel"
+        android:layout_marginStart="10dp"
+        android:layout_below="@+id/txtNotiNombreLabel"
+        style="@style/TextAppearance.Compat.Notification.Info"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtNotiHora"
+        android:text=""
+        android:id="@+id/txtNotiPax"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_toEndOf="@id/txtNotiPaxLabel"
+        android:layout_marginStart="5dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserva_pax"
+        android:layout_below="@id/txtNotiHoraLabel"
+        android:layout_marginStart="10dp"
+        android:id="@+id/txtNotiPaxLabel"
+        style="@style/TextAppearance.Compat.Notification.Info"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtNotiPax"
+        android:text=""
+        android:id="@+id/txtNotiMesa"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_toEndOf="@id/txtNotiMesaLabel"
+        android:layout_marginStart="5dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNotiMesaLabel"
+        android:text="@string/reserva_mesa"
+        android:layout_below="@+id/txtNotiPax"
+        android:layout_marginStart="10dp"
+        style="@style/TextAppearance.Compat.Notification.Info"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtNotiMesa"
+        android:id="@+id/txtNotiComentario"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_toEndOf="@id/txtNotiComentarioLabel"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNotiComentarioLabel"
+        android:text="@string/reserva_comentario"
+        android:layout_below="@+id/txtNotiMesa"
+        android:layout_marginStart="10dp"
+        style="@style/TextAppearance.Compat.Notification.Info"/>
+
+</RelativeLayout>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="15dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@drawable/shape_for_et">
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="7dp"
+            app:cardElevation="10dp"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:id="@+id/cuentaCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/andada"
+                android:padding="10dp"
+                tools:text="3"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="7dp"
+            app:cardElevation="10dp"
+            android:layout_toEndOf="@+id/cardCount">
+
+            <TextView
+                android:id="@+id/cuentaName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/andada"
+                android:padding="10dp"
+                tools:text="Gin Tonic Premio Boticario"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="7dp"
+            app:cardElevation="10dp"
+            android:layout_toStartOf="@+id/cardTotal">
+
+            <TextView
+                android:id="@+id/cuentaPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/andada"
+                android:padding="10dp"
+                tools:text="32"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="7dp"
+            app:cardElevation="10dp">
+
+            <TextView
+                android:id="@+id/cuentaTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/andada"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                tools:text="320"
+                android:textSize="13sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

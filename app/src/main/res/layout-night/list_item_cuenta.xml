@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentCuenta"
+    android:layout_marginHorizontal="20dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="20dp"
+    android:layout_marginTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_for_et">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lay1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginTop="5dp"
+                android:id="@+id/txtCuentaId"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/alegreya_sc"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/txtCuentaId"
+                android:src="@drawable/ic_expand"
+                app:tint="@color/light_grey"
+                android:id="@+id/imgExp"/>
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lay2"
+            android:visibility="visible"
+            android:layout_below="@+id/lay1">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layRec">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rec2"
+                    android:layout_margin="5dp"
+                    android:layout_centerInParent="true"/>
+
+
+            </RelativeLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fabAddCustomItemCuenta"
+                android:layout_below="@+id/layRec"
+                app:srcCompat="@drawable/ic_add"
+                app:fabCustomSize="30dp"
+                android:layout_margin="5dp"
+                android:layout_alignParentEnd="true"/>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/laySum"
+                android:layout_below="@+id/fabAddCustomItemCuenta">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtTotal"
+                    android:text="Total:"
+                    android:fontFamily="@font/alegreya_sc"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:textSize="16sp"
+                    android:layout_toLeftOf="@+id/cardSum"
+                    android:layout_alignBaseline="@+id/cardSum"
+                    android:padding="4dp"/>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cardSum"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:fontFamily="@font/alegreya_sc"
+                        android:textStyle="bold"
+                        android:textSize="19sp"
+                        android:padding="3dp"
+                        android:paddingHorizontal="3dp"
+                        android:id="@+id/txtSum"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="50dp"
+                android:layout_below="@+id/laySum"
+                app:tint="@color/light_grey"
+                android:src="@drawable/ic_wrap"
+                android:id="@+id/imgCol"/>
+
+
+        </RelativeLayout>
+
+
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>

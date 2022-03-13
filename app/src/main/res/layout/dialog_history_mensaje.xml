@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_rectangular">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/andada"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="10dp"
+        android:padding="10dp"
+        android:text="@string/history"
+        android:textAllCaps="false"
+        app:cornerRadius="10dp"
+        android:textSize="20sp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnMensaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/andada"
+        android:layout_marginHorizontal="5dp"
+        android:padding="10dp"
+        android:layout_marginVertical="10dp"
+        android:text="@string/enviar_mensaje"
+        android:textAllCaps="false"
+        app:cornerRadius="10dp"
+        android:layout_below="@id/btnHistory"
+        android:textSize="20sp"/>
+
+
+
+
+</RelativeLayout>

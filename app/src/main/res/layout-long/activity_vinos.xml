@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VinosActivity">
+
+    <TextView
+        android:id="@+id/txtTintos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Vinos tintos"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtBlancos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Vinos Blancos"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtTintos"
+        app:layout_constraintStart_toStartOf="@+id/txtTintos"
+        app:layout_constraintTop_toBottomOf="@+id/txtTintos" />
+
+    <TextView
+        android:id="@+id/txtPostre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Vinos de Postre"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtTintos"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="@+id/txtTintos"
+        app:layout_constraintTop_toBottomOf="@+id/txtRose" />
+
+    <TextView
+        android:id="@+id/txtCopa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Vinos por Copa"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtTintos"
+        app:layout_constraintStart_toStartOf="@+id/txtTintos"
+        app:layout_constraintTop_toBottomOf="@+id/txtPostre" />
+
+    <TextView
+        android:id="@+id/txtRose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/amatic_sc_bold"
+        android:text="Vinos Rosé"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtTintos"
+        app:layout_constraintStart_toStartOf="@+id/txtTintos"
+        app:layout_constraintTop_toBottomOf="@+id/txtBlancos" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

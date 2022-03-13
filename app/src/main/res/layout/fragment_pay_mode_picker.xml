@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rectangular">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/efectivo"
+        android:fontFamily="@font/andada"
+        android:background="@drawable/shape_for_et"
+        android:padding="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/txtPayEfectivo"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pos"
+        android:fontFamily="@font/andada"
+        android:background="@drawable/shape_for_et"
+        android:padding="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txtPayEfectivo"
+        android:id="@+id/txtPayVisa"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/yape"
+        android:fontFamily="@font/andada"
+        android:background="@drawable/shape_for_et"
+        android:padding="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txtPayVisa"
+        android:id="@+id/txtPayYape"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cripto"
+        android:fontFamily="@font/andada"
+        android:background="@drawable/shape_for_et"
+        android:padding="10dp"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txtPayYape"
+        android:id="@+id/txtPayCripto"
+        android:textSize="25sp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDivide"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/txtPayCripto"
+        android:text="@string/divide"
+        android:padding="10dp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/andada"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+
+</RelativeLayout>
