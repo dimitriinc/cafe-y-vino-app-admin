@@ -41,7 +41,7 @@ An Android app for administrators of the restaurant.
 
 ## Messaging
 
-The app employs a FirebaseMessagingService to receive downstream FCM messages sent from the customer side. On receiving a message, the app displays an appropriate notification, based on the type of action, stored in the message's data payload.
+The app employs a FirebaseMessagingService to receive downstream FCM messages sent from the customer side. On receiving a message, the app displays the appropriate notification, based on the type of action, stored in the message's data payload.
 
 ## Technologies
 
