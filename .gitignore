@@ -1,5 +1,6 @@
 
 .gradle/*
+gradle/*
 .idea/*
 app/build/*
 app/release/*

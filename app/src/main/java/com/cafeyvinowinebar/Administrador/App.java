@@ -17,7 +17,7 @@ public class App extends Application {
     public static final String CUENTA = "channelCuenta";
     private static final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
     public static final ExecutorService executor = Executors.newFixedThreadPool(NUMBER_OF_CORES * 2);
-    public static final String SENDER_ID = "1096226926741";
+    public static final String SENDER_ID = "check the firebase account";
 
     @Override
     public void onCreate() {
