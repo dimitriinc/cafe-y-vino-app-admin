@@ -1,19 +1,26 @@
 package com.cafeyvinowinebar.Administrador.POJOs;
 
-public class ItemShort {
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity (tableName = "products_to_redact")
+public class RedactEntity {
+
+    @PrimaryKey
+    @NonNull
     String name;
     String category;
     long price, count;
 
-    public ItemShort(String name, String category, long price, long count) {
+    public RedactEntity(@NonNull String name, String category, long price, long count) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.count = count;
     }
 
-    public ItemShort() {}
-
+    @NonNull
     public String getName() {
         return name;
     }
@@ -33,6 +40,5 @@ public class ItemShort {
     public void setCount(long count) {
         this.count = count;
     }
-
 
 }

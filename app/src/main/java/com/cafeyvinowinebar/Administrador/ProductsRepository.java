@@ -14,8 +14,8 @@ import java.util.concurrent.Future;
 
 public class ProductsRepository {
 
-    private ProductDao productDao;
-    private LiveData<List<ProductEntity>> products;
+    private final ProductDao productDao;
+    private final LiveData<List<ProductEntity>> products;
     ProductEntity product;
 
     public ProductsRepository(Application application) {
@@ -55,8 +55,8 @@ public class ProductsRepository {
 
     private static class InsertProductRunnable implements Runnable {
 
-        private ProductDao productDao;
-        private ProductEntity product;
+        private final ProductDao productDao;
+        private final ProductEntity product;
         private InsertProductRunnable(ProductDao productDao, ProductEntity product) {
             this.productDao = productDao;
             this.product = product;
@@ -70,8 +70,8 @@ public class ProductsRepository {
 
     private static class UpdateProductRunnable implements Runnable {
 
-        private ProductDao productDao;
-        private ProductEntity product;
+        private final ProductDao productDao;
+        private final ProductEntity product;
         private UpdateProductRunnable(ProductDao productDao, ProductEntity product) {
             this.productDao = productDao;
             this.product = product;
@@ -85,8 +85,8 @@ public class ProductsRepository {
 
     private static class DeleteProductRunnable implements Runnable {
 
-        private ProductDao productDao;
-        private ProductEntity product;
+        private final ProductDao productDao;
+        private final ProductEntity product;
         private DeleteProductRunnable(ProductDao productDao, ProductEntity product) {
             this.productDao = productDao;
             this.product = product;
@@ -100,7 +100,7 @@ public class ProductsRepository {
 
     private static class DeleteAllProductsRunnable implements Runnable {
 
-        private ProductDao productDao;
+        private final ProductDao productDao;
         private DeleteAllProductsRunnable(ProductDao productDao) {
             this.productDao = productDao;
         }
@@ -111,10 +111,10 @@ public class ProductsRepository {
         }
     }
 
-    private class GetProductCallable implements Callable<ProductEntity> {
+    private static class GetProductCallable implements Callable<ProductEntity> {
 
-        private ProductDao productDao;
-        private String name;
+        private final ProductDao productDao;
+        private final String name;
 
         public GetProductCallable(ProductDao productDao, String name) {
             this.productDao = productDao;
@@ -127,7 +127,7 @@ public class ProductsRepository {
         }
     }
 
-    private class IncrementProduct implements Runnable {
+    private static class IncrementProduct implements Runnable {
 
         ProductDao productDao;
         String name;

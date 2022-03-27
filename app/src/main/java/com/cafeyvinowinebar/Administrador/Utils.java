@@ -51,6 +51,7 @@ public class Utils {
     public static final String KEY_PRECIO = "precio";
     public static final String KEY_PAY_TYPE = "pay_type";
     public static final String KEY_META_ID = "metaDocId";
+    public static final String MESA_ID = "mesaID";
 
     // values
     public static final String TO_CLIENT = "toClient";
@@ -92,6 +93,7 @@ public class Utils {
     public static final String KEY_CONFIRMADO = "confirmado";
 
     public static final String[] FIXED_MESAS = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+
 
 
     public static String getMessageId() {

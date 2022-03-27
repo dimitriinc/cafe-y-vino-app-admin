@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Takes all the items in the pending bill collection and moves them to a cuenta cancelada collection
@@ -37,6 +38,7 @@ public class CuentaCancelador implements Runnable {
     private String userId;
     private String userMesa;
     private String userName;
+    private Long mesaId;
     private final String payType;
     private MesasViewModel mesasViewModel;
 
@@ -48,7 +50,8 @@ public class CuentaCancelador implements Runnable {
     }
 
     public CuentaCancelador(double montoEfectivo, double montoVisa, double montoYape,
-                            double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType) {
+                            double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType,
+                            MesasViewModel mesasViewModel) {
         this.montoEfectivo = montoEfectivo;
         this.montoVisa = montoVisa;
         this.montoYape = montoYape;
@@ -56,6 +59,7 @@ public class CuentaCancelador implements Runnable {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
+        this.mesasViewModel = mesasViewModel;
     }
 
     @Override
@@ -66,6 +70,7 @@ public class CuentaCancelador implements Runnable {
         userId = snapshot.getId();
         userMesa = snapshot.getString(Utils.KEY_MESA);
         userName = snapshot.getString(Utils.KEY_NAME);
+        mesaId = snapshot.getLong(Utils.MESA_ID);
         total = 0;
 
         // to calculate the total sum of the bill we get the cuenta collection and iterate through its documents
@@ -84,43 +89,54 @@ public class CuentaCancelador implements Runnable {
                         }
                     }
 
-                    // once we got the total sum, we calculate how much bonus points the user will receive
-                    long bono = (long) total / 10;
+                    // next, we check if the cuenta belongs to a customer or not
+                    // if it does, we need to update their personal doc, move data, and send a message
+                    // if the cuenta belongs to a custom user, we just move data and delete the cuenta meta doc
+                    if (userMesa.equals(userId)) {
 
-                    // then we deal with the customer's personal data
-                    // we need to increment his bonus points field
-                    // change his status to 'not present'
-                    // and update his mesa value to '00'
-                    DocumentReference reference = fStore.collection(Utils.USUARIOS)
-                            .document(userId);
-                    reference.get()
-                            .addOnSuccessListener(App.executor, userDocumentSnapshot -> {
+                        moveData(userId, userName, total);
+                        snapshot.getReference().delete();
 
-                                reference.update(Utils.KEY_BONOS, FieldValue.increment(bono));
-                                reference.update(Utils.IS_PRESENT, false);
-                                reference.update(Utils.KEY_MESA, "00");
+                    } else {
 
-                                // actually moves all the products from the pending cuenta collection
-                                // to the canceled cuenta collection
-                                moveData(userId, userName, total);
+                        // calculate how much bonus points the user will receive
+                        long bono = (long) total / 10;
 
-                                // after we moved the data, we delete the meta doc of the pending bill
-                                snapshot.getReference().delete();
+                        // then we deal with the customer's personal data
+                        // we need to increment his bonus points field
+                        // change his status to 'not present'
+                        // and update his mesa value to '00'
+                        DocumentReference reference = fStore.collection(Utils.USUARIOS)
+                                .document(userId);
+                        reference.get()
+                                .addOnSuccessListener(App.executor, userDocumentSnapshot -> {
 
-                                // get some personal data about the user
-                                String token = userDocumentSnapshot.getString(Utils.KEY_TOKEN);
-                                String nombre = userDocumentSnapshot.getString(Utils.KEY_NOMBRE);
+                                    reference.update(Utils.KEY_BONOS, FieldValue.increment(bono));
+                                    reference.update(Utils.IS_PRESENT, false);
+                                    reference.update(Utils.KEY_MESA, "00");
 
-                                // send a goodbye message to the client
-                                fMessaging.send(new RemoteMessage.Builder(App.SENDER_ID + "@fcm.googleapis.com")
-                                        .setMessageId(Utils.getMessageId())
-                                        .addData(Utils.KEY_TOKEN, token)
-                                        .addData(Utils.KEY_NOMBRE, nombre)
-                                        .addData(Utils.KEY_BONO, String.valueOf(bono))
-                                        .addData(Utils.KEY_ACTION, Utils.ACTION_CUENTA_ADMIN)
-                                        .addData(Utils.KEY_TYPE, Utils.TO_CLIENT)
-                                        .build());
-                            });
+                                    // actually moves all the products from the pending cuenta collection
+                                    // to the canceled cuenta collection
+                                    moveData(userId, userName, total);
+
+                                    // after we moved the data, we delete the meta doc of the pending bill
+                                    snapshot.getReference().delete();
+
+                                    // get some personal data about the user
+                                    String token = userDocumentSnapshot.getString(Utils.KEY_TOKEN);
+                                    String nombre = userDocumentSnapshot.getString(Utils.KEY_NOMBRE);
+
+                                    // send a goodbye message to the client
+                                    fMessaging.send(new RemoteMessage.Builder(App.SENDER_ID + "@fcm.googleapis.com")
+                                            .setMessageId(Utils.getMessageId())
+                                            .addData(Utils.KEY_TOKEN, token)
+                                            .addData(Utils.KEY_NOMBRE, nombre)
+                                            .addData(Utils.KEY_BONO, String.valueOf(bono))
+                                            .addData(Utils.KEY_ACTION, Utils.ACTION_CUENTA_ADMIN)
+                                            .addData(Utils.KEY_TYPE, Utils.TO_CLIENT)
+                                            .build());
+                                });
+                    }
                 });
     }
 
@@ -177,7 +193,7 @@ public class CuentaCancelador implements Runnable {
 
                 // next operation depends on to whom belongs the bill: to a custom user, or a user of the app
                 // reminder: IDs of the bills of custom users correspond to the table number
-                if (!userMesa.equals(snapshot.getId())) {
+                if (!userMesa.equals(userId)) {
                     // means the cuenta belongs to a user of the app
                     // in this case we store the product in the personal consumo collection of the user
                     // as we did with the total consumo collection, get a reference of a document with the item's name in the collection
@@ -207,6 +223,14 @@ public class CuentaCancelador implements Runnable {
                     for (String table : Utils.FIXED_MESAS) {
                         if (userMesa.equals(table)) {
                             mesaIsFixed = true;
+
+                            // the mesa is one of the fixed ones
+                            // at cancellation we must set the presence state to false
+                            try {
+                                mesasViewModel.getMesaById(mesaId.intValue()).setPresent(false);
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         }
                     }

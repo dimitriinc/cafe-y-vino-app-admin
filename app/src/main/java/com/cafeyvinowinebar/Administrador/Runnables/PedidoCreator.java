@@ -30,10 +30,12 @@ public class PedidoCreator implements Runnable {
 
     private final String currentDate, mesa;
     private final List<ProductEntity> canasta;
+    private int mesaId;
 
-    public PedidoCreator(String currentDate, String mesa, List<ProductEntity> canasta) {
+    public PedidoCreator(String currentDate, String mesa, List<ProductEntity> canasta, int mesaId) {
         this.currentDate = currentDate;
         this.mesa = mesa;
+        this.mesaId = mesaId;
         this.canasta = canasta;
     }
 
@@ -77,6 +79,7 @@ public class PedidoCreator implements Runnable {
         doc.put(Utils.SERVIDO_COCINA, servidoCocina);
         doc.put(Utils.KEY_USER, "Cliente");
         doc.put(Utils.KEY_USER_ID, mesa);
+        doc.put(Utils.MESA_ID, (long) mesaId);
         doc.put(Utils.TIMESTAMP, new Timestamp(new Date()));
 
         metaDoc.set(doc).addOnSuccessListener(App.executor, unused ->

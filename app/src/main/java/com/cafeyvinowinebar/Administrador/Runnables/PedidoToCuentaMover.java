@@ -13,7 +13,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Iterates through the pedido collection
- * And moves each product to a cuenta collection
+ * And moves each product to the cuenta collection
  */
 public class PedidoToCuentaMover implements Runnable {
 
@@ -37,10 +37,11 @@ public class PedidoToCuentaMover implements Runnable {
         Query query;
 
         // retrieve some user data from the meta doc
-        // we'll need to create a cuenta meta doc
+        // with which we'll create a cuenta meta doc
         String userId = documentSnapshot.getString(Utils.KEY_USER_ID);
         String userName = documentSnapshot.getString(Utils.KEY_USER);
         String userMesa = documentSnapshot.getString(Utils.KEY_MESA);
+        Long mesaId = documentSnapshot.getLong(Utils.MESA_ID);
 
         // get a reference to the pedido's collection
         CollectionReference pedido = fStore.collection(documentSnapshot.getReference().getPath() + "/pedido");
@@ -89,7 +90,7 @@ public class PedidoToCuentaMover implements Runnable {
                         // if a product with the same name already exists, we'll increment its count
                         // if it doesn't, we will create a new document for the product; and populate the meta doc with the user data
                         App.executor.submit(new CuentaCreator(reference, latch, name, userName, userMesa, userId, currentDate,
-                                price, cantidad));
+                                price, cantidad, mesaId));
 
                         // latch the thread after starting the background task
                         try {

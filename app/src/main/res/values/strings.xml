@@ -24,6 +24,7 @@
     <string name="nuevo_pedido">Nuevo pedido - Mesa %1$s</string>
     <string name="asignar_mesa">Asignar una mesa</string>
     <string name="usarios_no_mesa">El campo está vacio</string>
+    <string name="cliente">Cliente</string>
 
     <string name="email">email</string>
     <string name="contraseña">contraseña</string>

@@ -24,4 +24,10 @@ public interface MesaDao {
 
     @Query("SELECT * FROM mesas ORDER BY id ASC")
     LiveData<List<MesaEntity>> getAllMesas();
+
+    @Query("SELECT * FROM mesas WHERE isPresent")
+    LiveData<List<MesaEntity>> getPresentMesas();
+
+    @Query("SELECT * FROM mesas WHERE id = :id")
+    MesaEntity getMesaById(int id);
 }

@@ -29,6 +29,7 @@ import com.google.firebase.firestore.Query;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Has a main screen and a sliding panel
@@ -49,12 +50,14 @@ public class NewPedidoActivity extends AppCompatActivity {
     private AdapterMenu adapterMenu;
     private FloatingActionButton fabCanastaOk, fabCanastaNewItem;
     public ProductsViewModel productsViewModel;
+    private MesasViewModel mesasViewModel;
     FragmentManager manager;
     String mesa, currentDate;
 
-    public static Intent newIntent(Context context, String mesa) {
+    public static Intent newIntent(Context context, String mesa, int mesaId) {
         Intent i = new Intent(context, NewPedidoActivity.class);
         i.putExtra(Utils.KEY_MESA, mesa);
+        i.putExtra(Utils.MESA_ID, mesaId);
         return i;
     }
 
@@ -64,6 +67,7 @@ public class NewPedidoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_pedido);
 
         mesa = getIntent().getStringExtra(Utils.KEY_MESA);
+        int mesaId = getIntent().getIntExtra(Utils.MESA_ID, 0);
 
         init();
 
@@ -90,10 +94,17 @@ public class NewPedidoActivity extends AppCompatActivity {
         fabCanastaOk.setOnClickListener(v -> {
 
             // create a new pedido in the FirestoreDB on a background thread
-            App.executor.submit(new PedidoCreator(currentDate, mesa, productsViewModel.getProducts().getValue()));
+            App.executor.submit(new PedidoCreator(currentDate, mesa, productsViewModel.getProducts().getValue(), mesaId));
 
             // clear the 'products' table
             productsViewModel.deleteAllProducts();
+
+            // change the mesa's status to 'present'
+            try {
+                mesasViewModel.getMesaById(mesaId).setPresent(true);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
 
             // return to the dialog fragment with the list of tables
             finish();
@@ -157,6 +168,7 @@ public class NewPedidoActivity extends AppCompatActivity {
         fabCanastaOk = findViewById(R.id.fabCanastaOk);
         fabCanastaNewItem = findViewById(R.id.fabCanastaNewItem);
         productsViewModel = new ViewModelProvider(this).get(ProductsViewModel.class);
+        mesasViewModel = new ViewModelProvider(this).get(MesasViewModel.class);
         currentDate = Utils.getCurrentDate();
     }
 

@@ -28,10 +28,11 @@ public class CuentaCreator implements Runnable {
     private final String name;
     public String userName, userMesa, userId, currentDate;
     private final long price, count;
+    public Long mesaId;
 
     public CuentaCreator(DocumentReference reference, CountDownLatch latch, String name,
                          String userName, String userMesa, String userId, String currentDate,
-                         long price, long count) {
+                         long price, long count, Long mesaId) {
 
         this.reference = reference;
         this.latch = latch;
@@ -42,6 +43,7 @@ public class CuentaCreator implements Runnable {
         this.currentDate = currentDate;
         this.price = price;
         this.count = count;
+        this.mesaId = mesaId;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class CuentaCreator implements Runnable {
                             // and create a meta document for the cuenta, but only if the item is the first to enter the collection
                             reference.set(new CuentaItem(name, count, price, count * price))
                                     .addOnSuccessListener(App.executor, unused -> latch.countDown());
-                            App.executor.submit(new CuentaMetaDocSetter(userName, userMesa, userId, currentDate));
+                            App.executor.submit(new CuentaMetaDocSetter(userName, userMesa, userId, currentDate, mesaId));
                         }
                     });
 

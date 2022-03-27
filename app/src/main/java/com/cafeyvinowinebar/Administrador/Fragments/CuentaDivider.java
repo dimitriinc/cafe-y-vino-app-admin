@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.cafeyvinowinebar.Administrador.App;
+import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Runnables.CuentaCancelador;
 import com.cafeyvinowinebar.Administrador.Utils;
@@ -38,11 +39,13 @@ public class CuentaDivider extends DialogFragment {
     public String currentDate;
     private FloatingActionButton fabReset;
     public DocumentSnapshot snapshot;
+    public MesasViewModel mesasViewModel;
     public double total, montoEfectivo, montoVisa, montoYape, montoCripto;
 
-    public CuentaDivider(String currentDate, DocumentSnapshot snapshot) {
+    public CuentaDivider(String currentDate, DocumentSnapshot snapshot, MesasViewModel mesasViewModel) {
         this.currentDate = currentDate;
         this.snapshot = snapshot;
+        this.mesasViewModel = mesasViewModel;
     }
 
     @Nullable
@@ -106,7 +109,8 @@ public class CuentaDivider extends DialogFragment {
             if (montoEfectivo + montoVisa + montoYape + montoCripto != total) {
                 Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             } else {
-                App.executor.submit(new CuentaCancelador(montoEfectivo, montoVisa, montoYape, montoCripto, snapshot, currentDate, Utils.DIVIDIDO));
+                App.executor.submit(new CuentaCancelador(montoEfectivo, montoVisa, montoYape, montoCripto, snapshot, currentDate, Utils.DIVIDIDO,
+                        mesasViewModel));
                 dismiss();
             }
         });

@@ -14,18 +14,19 @@ public class ProductEntity {
     private long count;
     private long price;
 
-    public ProductEntity(String name, String category, long count, long price) {
+    public ProductEntity(@NonNull String name, String category, long count, long price) {
         this.name = name;
         this.category = category;
         this.count = count;
         this.price = price;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 

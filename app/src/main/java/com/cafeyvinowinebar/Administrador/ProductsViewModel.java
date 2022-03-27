@@ -14,8 +14,8 @@ import java.util.concurrent.ExecutionException;
 
 public class ProductsViewModel extends AndroidViewModel {
 
-    private ProductsRepository repo;
-    private LiveData<List<ProductEntity>> products;
+    private final ProductsRepository repo;
+    private final LiveData<List<ProductEntity>> products;
 
     public ProductsViewModel(@NonNull Application application) {
         super(application);

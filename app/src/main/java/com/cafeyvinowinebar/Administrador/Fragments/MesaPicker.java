@@ -84,7 +84,7 @@ public class MesaPicker extends DialogFragment {
                     dismiss();
 
                     // go to the NewPedidoActivity with the name of the new table
-                    startActivity(NewPedidoActivity.newIntent(getContext(), newMesa));
+                    startActivity(NewPedidoActivity.newIntent(getContext(), newMesa, mesaId));
                 }
             });
             dialog.show();

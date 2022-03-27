@@ -39,7 +39,7 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
     private final Context context;
     public String currentDate;
     private OnItemLongClickListener longListener;
-    private OnItemClickListener listener;
+    private OnItemClickListener listener, redactListener;
     public String mode;
 
     public AdapterPedidos(@NonNull FirestoreRecyclerOptions<Mesa> options, Context context,
@@ -88,6 +88,7 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
             parent = itemView.findViewById(R.id.parentPedidos);
             downRecView = itemView.findViewById(R.id.downRecView);
             FloatingActionButton fabAdd = itemView.findViewById(R.id.fabAddCustomItem);
+            FloatingActionButton fabRedact = itemView.findViewById(R.id.fabRedactPedido);
 
             itemView.setOnLongClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
@@ -101,6 +102,13 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
                 int position = getAbsoluteAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onItemClick(getSnapshots().getSnapshot(position), position, v);
+                }
+            });
+
+            fabRedact.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && redactListener != null) {
+                    redactListener.onItemClick(getSnapshots().getSnapshot(position), position, v);
                 }
             });
         }
@@ -188,5 +196,9 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnRedactClickListener(OnItemClickListener redactListener) {
+        this.redactListener = redactListener;
     }
 }

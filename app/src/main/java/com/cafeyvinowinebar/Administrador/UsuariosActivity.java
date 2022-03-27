@@ -2,7 +2,9 @@ package com.cafeyvinowinebar.Administrador;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cafeyvinowinebar.Administrador.Adapters.AdapterCustomUsuarios;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterUsuarios;
 import com.cafeyvinowinebar.Administrador.Fragments.UserSearcher;
 import com.cafeyvinowinebar.Administrador.POJOs.Usuario;
@@ -27,6 +30,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Displays the list of the customers with the 'present' status
@@ -44,6 +49,7 @@ public class UsuariosActivity extends AppCompatActivity {
     private final FirebaseMessaging fMessaging = FirebaseMessaging.getInstance();
 
     private RecyclerView recUsarios;
+    private RecyclerView recCustomUsuarios;
     private AdapterUsuarios adapter;
     String currentDate;
     private SlidingUpPanelLayout slidingLayout;
@@ -51,6 +57,7 @@ public class UsuariosActivity extends AppCompatActivity {
     private MaterialButton btnBuscarUsuarios;
     private EditText edtUserName;
     private UserSearcher fragment;
+    private MesasViewModel mesasViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +84,9 @@ public class UsuariosActivity extends AppCompatActivity {
 
         // sets the recycler view on the main screen
         setupAdapter();
+
+        // sets the recycler view for the custom tables
+        setupCustomAdapter();
 
         // searches customers on the sliding panel
         btnBuscarUsuarios.setOnClickListener(v -> {
@@ -107,7 +117,7 @@ public class UsuariosActivity extends AppCompatActivity {
 
         adapter = new AdapterUsuarios(options);
         recUsarios.setAdapter(adapter);
-        recUsarios.setLayoutManager(new GridLayoutManager(this, 2));
+        recUsarios.setLayoutManager(new LinearLayoutManager(this));
         adapter.setOnItemClickListener((snapshot, position, v) -> {
 
             String token = snapshot.getString(Utils.KEY_TOKEN);
@@ -125,7 +135,7 @@ public class UsuariosActivity extends AppCompatActivity {
             builder.setPositiveButton(getString(R.string.cambiar), (dialog, which) -> {
 
                 // updating the table value
-                String mesa = etMesa.getText().toString();
+                String mesa = etMesa.getText().toString().trim();
                 if (mesa.isEmpty()) {
                     Toast.makeText(getBaseContext(), getString(R.string.usarios_no_mesa), Toast.LENGTH_SHORT).show();
                 } else {
@@ -172,14 +182,24 @@ public class UsuariosActivity extends AppCompatActivity {
 
     }
 
+    private void setupCustomAdapter() throws ExecutionException, InterruptedException {
+
+        recCustomUsuarios.setLayoutManager(new LinearLayoutManager(this));
+        AdapterCustomUsuarios adapter = new AdapterCustomUsuarios(this);
+        recCustomUsuarios.setAdapter(adapter);
+        mesasViewModel.getPresentMesas().observe(this, adapter::submitList);
+    }
+
     private void init() {
 
         currentDate = Utils.getCurrentDate();
         recUsarios = findViewById(R.id.recUsarios);
+        recCustomUsuarios = findViewById(R.id.recCustomUsuarios);
         slidingLayout = findViewById(R.id.slidingUpUsuarios);
         imgSlidingUsuarios = findViewById(R.id.imgSlidingUsuarios);
         btnBuscarUsuarios = findViewById(R.id.btnBuscarUsuarios);
         edtUserName = findViewById(R.id.edtUserName);
+        mesasViewModel = new ViewModelProvider(this).get(MesasViewModel.class);
     }
 
     @Override

@@ -10,7 +10,7 @@
     android:id="@+id/slidingUpUsuarios">
 
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/usarios_parent">
@@ -18,10 +18,29 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recUsarios"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_item_usario"
+            android:layout_centerInParent="true"
+            app:layout_constraintEnd_toStartOf="@+id/guideline8"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </RelativeLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="363dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recCustomUsuarios"
+            android:layout_width="wrap_content"
+            tools:listitem="@layout/list_item_usario"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            tools:layout_editor_absoluteY="1dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

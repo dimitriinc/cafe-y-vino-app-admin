@@ -11,11 +11,16 @@ public class MesaEntity {
 
     private String mesa;
 
+    // the mesa is blocked if occupied by a user of the client app (has pedidos or cuentas assigned to it)
     boolean blocked;
+
+    boolean isPresent;
 
     public MesaEntity(String mesa, boolean blocked) {
         this.mesa = mesa;
         this.blocked = blocked;
+        // when a mesa is created, it still doesn't have any pedidos, so the presence status must be false
+        isPresent = false;
     }
 
     public int getId() {
@@ -40,5 +45,13 @@ public class MesaEntity {
 
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public boolean isPresent() {
+        return isPresent;
+    }
+
+    public void setPresent(boolean present) {
+        isPresent = present;
     }
 }

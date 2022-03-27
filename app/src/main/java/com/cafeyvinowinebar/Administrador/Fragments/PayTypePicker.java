@@ -72,7 +72,7 @@ public class PayTypePicker extends DialogFragment {
             dismiss();
         });
         btnDivide.setOnClickListener(v -> {
-            CuentaDivider fragment = new CuentaDivider(currentDate, snapshot);
+            CuentaDivider fragment = new CuentaDivider(currentDate, snapshot, mesasViewModel);
             fragment.show(manager, Utils.TAG);
             dismiss();
         });

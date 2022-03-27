@@ -17,12 +17,14 @@ public class CuentaMetaDocSetter implements Runnable {
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     private final String userName, userMesa, userId, currentDate;
+    private final Long mesaId;
 
-    public CuentaMetaDocSetter(String userName, String userMesa, String userId, String currentDate) {
+    public CuentaMetaDocSetter(String userName, String userMesa, String userId, String currentDate, Long mesaId) {
         this.userName = userName;
         this.userMesa = userMesa;
         this.userId = userId;
         this.currentDate = currentDate;
+        this.mesaId = mesaId;
     }
 
     @Override
@@ -40,6 +42,11 @@ public class CuentaMetaDocSetter implements Runnable {
 
                 // populates the meta doc with meta data
                 Map<String, Object> cuentaData = new HashMap<>();
+
+                // mesaId will be null, if the pedido was created by a user of the client app
+                if (mesaId != null) {
+                    cuentaData.put(Utils.MESA_ID, mesaId);
+                }
                 cuentaData.put(Utils.KEY_NAME, userName);
                 cuentaData.put(Utils.KEY_MESA, userMesa);
                 cuentaData.put(Utils.KEY_IS_EXPANDED, false);

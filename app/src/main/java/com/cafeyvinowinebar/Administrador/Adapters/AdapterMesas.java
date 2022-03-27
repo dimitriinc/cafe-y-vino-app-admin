@@ -61,7 +61,8 @@ public class AdapterMesas extends ListAdapter<MesaEntity, AdapterMesas.ViewHolde
         @Override
         public boolean areContentsTheSame(@NonNull MesaEntity oldItem, @NonNull MesaEntity newItem) {
             return oldItem.getMesa().equals(newItem.getMesa()) &&
-                    oldItem.isBlocked() == newItem.isBlocked();
+                    oldItem.isBlocked() == newItem.isBlocked() &&
+                    oldItem.isPresent() == newItem.isPresent();
         }
     };
 
@@ -99,7 +100,7 @@ public class AdapterMesas extends ListAdapter<MesaEntity, AdapterMesas.ViewHolde
                     // the table is occupied by the app's user
                     Toast.makeText(context, R.string.mesa_blocked, Toast.LENGTH_SHORT).show();
                 } else {
-                    context.startActivity(NewPedidoActivity.newIntent(context, mesa.getMesa()));
+                    context.startActivity(NewPedidoActivity.newIntent(context, mesa.getMesa(), mesa.getId()));
 
                 }
             });

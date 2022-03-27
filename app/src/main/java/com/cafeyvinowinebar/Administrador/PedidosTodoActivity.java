@@ -3,6 +3,8 @@ package com.cafeyvinowinebar.Administrador;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,15 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterPedidos;
+import com.cafeyvinowinebar.Administrador.Fragments.Redact;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.cafeyvinowinebar.Administrador.Runnables.NewItemPedidoAdder;
 import com.cafeyvinowinebar.Administrador.Runnables.CollectionDeleter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * Displays the pending orders of the current date
@@ -36,6 +41,8 @@ import com.google.firebase.firestore.Query;
  */
 public class PedidosTodoActivity extends AppCompatActivity {
 
+    public static final String KEY_REDACT = "keyRedact";
+
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     private RecyclerView upRecView;
@@ -43,6 +50,7 @@ public class PedidosTodoActivity extends AppCompatActivity {
     private String currentDate, mode;
     private CollectionReference collection;
     private Query query;
+    private FragmentManager fragmentManager;
 
     public static Intent newIntent(Context context, String mode) {
         Intent i = new Intent(context, PedidosTodoActivity.class);
@@ -56,6 +64,13 @@ public class PedidosTodoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pedidos_todo);
 
         init();
+
+        fragmentManager.setFragmentResultListener(KEY_REDACT, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+            }
+        });
 
         setupAdapter();
 
@@ -111,6 +126,13 @@ public class PedidosTodoActivity extends AppCompatActivity {
         // it varies slightly on the 'mode' value
         adapter.setOnItemClickListener((snapshot, position, view) -> showAddProductDialog(mode, snapshot));
 
+        // we also listen to the 'redact order' button, which opens a dialog fragment for the redaction
+        // we pass a list of products (doc snapshots) to the fragment
+        adapter.setOnRedactClickListener((snapshot, position, view) -> {
+            fStore.collection(snapshot.getReference().getPath() + "/pedido").get()
+                    .addOnSuccessListener(App.executor, queryDocumentSnapshots -> new Redact(queryDocumentSnapshots.getDocuments()).show(fragmentManager, "redaction"));
+        });
+
         // the long click listener is set only in the 'everything' mode, it deletes the order completely
         if (mode.equals(Utils.TODO)) {
             adapter.setOnItemLongClickListener((snapshot, position, v) -> {
@@ -139,6 +161,8 @@ public class PedidosTodoActivity extends AppCompatActivity {
         collection = fStore.collection(Utils.PEDIDOS)
                 .document(currentDate)
                 .collection("pedidos enviados");
+
+        fragmentManager = getSupportFragmentManager();
     }
 
 
