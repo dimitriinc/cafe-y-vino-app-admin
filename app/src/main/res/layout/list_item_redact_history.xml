@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="20dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="20dp"
+    android:layout_marginTop="10dp"
+    android:id="@+id/parentCuentaCancel">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_for_et">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtRedactHistoryTitle"
+            tools:text="Cliente - 08"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:fontFamily="@font/andada"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recRedactChanges"
+            android:layout_below="@+id/txtRedactHistoryTitle"
+            android:layout_margin="10dp"
+            tools:listitem="@layout/list_item_consumo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtRedactComment"
+            android:fontFamily="@font/andada"
+            android:textSize="18sp"
+            android:layout_below="@+id/recRedactChanges"
+            android:padding="10dp"
+            tools:text="Some dummy text, foo and some words more, just to fill in some space, to have an idea how it will look"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"/>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

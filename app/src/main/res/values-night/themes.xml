@@ -7,7 +7,7 @@
         <item name="colorOnPrimary">@color/light_grey</item>
         <!-- Secondary brand color. -->
         <item name="materialCalendarTheme">@style/ThemeOverlay.App.DatePicker</item>
-        <item name="colorSecondary">@color/beige</item>
+        <item name="colorSecondary">@color/white</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->

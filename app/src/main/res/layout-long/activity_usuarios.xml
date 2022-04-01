@@ -18,9 +18,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recUsarios"
             android:layout_width="wrap_content"
+            android:layout_marginVertical="60dp"
             android:layout_height="match_parent"
             tools:listitem="@layout/list_item_usario"
-            android:layout_centerInParent="true"
             app:layout_constraintEnd_toStartOf="@+id/guideline9"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -34,11 +34,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recCustomUsuarios"
             tools:listitem="@layout/list_item_usario"
+            android:layout_marginVertical="60dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline9"
-            tools:layout_editor_absoluteY="1dp" />
+            app:layout_constraintStart_toStartOf="@+id/guideline9"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

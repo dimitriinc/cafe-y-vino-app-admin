@@ -25,6 +25,7 @@
     <string name="asignar_mesa">Asignar una mesa</string>
     <string name="usarios_no_mesa">El campo está vacio</string>
     <string name="cliente">Cliente</string>
+    <string name="redaction_title">%1$s - %2$s</string>
 
     <string name="email">email</string>
     <string name="contraseña">contraseña</string>
@@ -95,6 +96,15 @@
     <string name="monto">monto</string>
     <string name="listo">Listo</string>
     <string name="error">Algo no está correcto</string>
+
+    <string name="platos">Platos</string>
+    <string name="piqueos">Piqueos</string>
+    <string name="vinos">Vinos</string>
+    <string name="cocteles">Cocteles</string>
+    <string name="cervezas">Cervezas</string>
+    <string name="regalos">Regalos</string>
+    <string name="bebidas_calientes">Bebidas Calientes</string>
+    <string name="ofertas">Ofertas</string>
 
 
 </resources>

@@ -75,8 +75,9 @@
                 android:id="@+id/fabAddCustomItemCuenta"
                 android:layout_below="@+id/layRec"
                 app:srcCompat="@drawable/ic_add"
-                app:fabCustomSize="30dp"
-                android:layout_margin="5dp"
+                app:fabCustomSize="45dp"
+                android:layout_marginVertical="5dp"
+                android:layout_marginEnd="25dp"
                 android:layout_alignParentEnd="true"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -84,9 +85,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layRec"
-                android:layout_margin="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_marginStart="25dp"
                 android:layout_alignParentStart="true"
-                app:fabCustomSize="30dp"
+                app:fabCustomSize="45dp"
                 app:srcCompat="@drawable/ic_redact" />
 
 

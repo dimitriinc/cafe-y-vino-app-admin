@@ -48,4 +48,16 @@
         app:srcCompat="@drawable/ic_dollar"
         android:layout_above="@+id/fabGift_cancel"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabRedactHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:maxImageSize="35dp"
+        android:clickable="true"
+        android:layout_alignParentStart="true"
+        app:srcCompat="@drawable/ic_redact"
+        android:layout_above="@+id/fabMoney"/>
+
 </RelativeLayout>
