@@ -1,13 +1,11 @@
 package com.cafeyvinowinebar.Administrador;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
 import com.cafeyvinowinebar.Administrador.Interfaces.MesaDao;
 import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
-import com.squareup.okhttp.Call;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -42,13 +40,17 @@ public class MesasRepository {
     }
 
     public LiveData<List<MesaEntity>> getPresentMesas() throws ExecutionException, InterruptedException {
-        Future<LiveData<List<MesaEntity>>> future = App.executor.submit(new getPresentMesasCallable(mesaDao));
+        Future<LiveData<List<MesaEntity>>> future = App.executor.submit(new GetPresentMesasCallable(mesaDao));
         return future.get();
     }
 
     public MesaEntity getMesaByID(int id) throws ExecutionException, InterruptedException {
-        Future<MesaEntity> future = App.executor.submit(new getMesaCallable(mesaDao, id));
+        Future<MesaEntity> future = App.executor.submit(new GetMesaCallable(mesaDao, id));
         return future.get();
+    }
+
+    public void setPresence(int id, boolean isPresent) {
+        App.executor.submit(new PresenceSetter(mesaDao, id, isPresent));
     }
 
     private static class InsertMesaRunnable implements Runnable {
@@ -100,11 +102,11 @@ public class MesasRepository {
     /**
      * gets all the custom tables that are occupied (have pedidos or cuentas assigned to them)
      */
-    private static class getPresentMesasCallable implements Callable<LiveData<List<MesaEntity>>> {
+    private static class GetPresentMesasCallable implements Callable<LiveData<List<MesaEntity>>> {
 
         private final MesaDao mesaDao;
 
-        public getPresentMesasCallable(MesaDao mesaDao) {
+        public GetPresentMesasCallable(MesaDao mesaDao) {
             this.mesaDao = mesaDao;
         }
 
@@ -114,12 +116,12 @@ public class MesasRepository {
         }
     }
 
-    private static class getMesaCallable implements Callable<MesaEntity> {
+    private static class GetMesaCallable implements Callable<MesaEntity> {
 
         private final MesaDao mesaDao;
         private final int id;
 
-        public getMesaCallable(MesaDao mesaDao, int id) {
+        public GetMesaCallable(MesaDao mesaDao, int id) {
             this.mesaDao = mesaDao;
             this.id = id;
         }
@@ -127,6 +129,24 @@ public class MesasRepository {
         @Override
         public MesaEntity call() throws Exception {
             return mesaDao.getMesaById(id);
+        }
+    }
+
+    private static class PresenceSetter implements Runnable {
+
+        private final MesaDao mesaDao;
+        private final int id;
+        private final boolean isPresent;
+
+        public PresenceSetter(MesaDao mesaDao, int id, boolean isPresent) {
+            this.mesaDao = mesaDao;
+            this.id = id;
+            this.isPresent = isPresent;
+        }
+
+        @Override
+        public void run() {
+            mesaDao.setPresence(id, isPresent);
         }
     }
 }

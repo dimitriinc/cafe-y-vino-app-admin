@@ -100,11 +100,7 @@ public class NewPedidoActivity extends AppCompatActivity {
             productsViewModel.deleteAllProducts();
 
             // change the mesa's status to 'present'
-            try {
-                mesasViewModel.getMesaById(mesaId).setPresent(true);
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            mesasViewModel.setPresence(mesaId, true);
 
             // return to the dialog fragment with the list of tables
             finish();

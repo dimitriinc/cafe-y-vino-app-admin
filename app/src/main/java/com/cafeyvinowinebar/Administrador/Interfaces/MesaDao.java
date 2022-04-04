@@ -30,4 +30,7 @@ public interface MesaDao {
 
     @Query("SELECT * FROM mesas WHERE id = :id")
     MesaEntity getMesaById(int id);
+
+    @Query("UPDATE mesas SET isPresent = :isPresent WHERE id = :id")
+    void setPresence(int id, boolean isPresent);
 }

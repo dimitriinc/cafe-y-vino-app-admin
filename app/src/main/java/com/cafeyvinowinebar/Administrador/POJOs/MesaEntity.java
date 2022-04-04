@@ -19,8 +19,6 @@ public class MesaEntity {
     public MesaEntity(String mesa, boolean blocked) {
         this.mesa = mesa;
         this.blocked = blocked;
-        // when a mesa is created, it still doesn't have any pedidos, so the presence status must be false
-        isPresent = false;
     }
 
     public int getId() {

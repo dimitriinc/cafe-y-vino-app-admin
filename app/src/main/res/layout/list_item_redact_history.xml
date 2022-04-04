@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/recRedactChanges"
             android:layout_below="@+id/txtRedactHistoryTitle"
-            android:layout_margin="10dp"
+            android:layout_marginHorizontal="10dp"
             tools:listitem="@layout/list_item_consumo"/>
 
         <TextView

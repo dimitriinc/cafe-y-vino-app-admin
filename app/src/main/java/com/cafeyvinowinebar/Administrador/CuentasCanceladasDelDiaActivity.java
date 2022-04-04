@@ -49,6 +49,7 @@ public class CuentasCanceladasDelDiaActivity extends AppCompatActivity {
         fabCuentasHome.setOnClickListener(v -> startActivity(new Intent(getBaseContext(), MainActivity.class)));
         FloatingActionButton fabGift = findViewById(R.id.fabGift_cancel);
         FloatingActionButton fabMoney = findViewById(R.id.fabMoney);
+        FloatingActionButton fabRedactHistory = findViewById(R.id.fabRedactHistory);
         Handler mainHandler = new Handler();
         manager = getSupportFragmentManager();
 
@@ -70,6 +71,9 @@ public class CuentasCanceladasDelDiaActivity extends AppCompatActivity {
                 // displays how much money was gained during the day, and how it's divided between the payment types
                 fabMoney.setOnClickListener(v -> App.executor.submit(new IngresoTotalDisplayer(query, mainHandler,
                         manager)));
+
+                // displays the history of redactions for the chosen date
+                fabRedactHistory.setOnClickListener(v -> startActivity(RedactHIstoryActivity.newIntent(getBaseContext(), date)));
             }
         }
     }

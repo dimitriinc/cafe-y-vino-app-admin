@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,15 +37,13 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuentas.ViewHolder> {
 
-    private static final String TAG = "AdapterCuentas";
-
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     public String currentDate;
     private final Context context;
     private final Activity activity;
     public volatile double total;
-    private OnItemClickListener listener;
+    private OnItemClickListener addListener, redactListener;
     private OnItemLongClickListener longListener;
     public Handler handler;
     public FragmentManager manager;
@@ -80,8 +77,6 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
         DocumentSnapshot snapshot = getSnapshots().getSnapshot(position);
         PayTypePicker fragment = new PayTypePicker(snapshot, currentDate, manager);
         fragment.show(manager, Utils.TAG);
-
-        Log.i(TAG, "cancel: the total sum:: " + total);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -103,6 +98,7 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
             rec2 = itemView.findViewById(R.id.rec2);
             parent = itemView.findViewById(R.id.parentCuenta);
             FloatingActionButton fabAdd = itemView.findViewById(R.id.fabAddCustomItemCuenta);
+            FloatingActionButton fabRedact = itemView.findViewById(R.id.fabRedactCuenta);
 
             itemView.setOnLongClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
@@ -114,10 +110,18 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
 
             fabAdd.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onItemClick(getSnapshots().getSnapshot(position), position, v);
+                if (position != RecyclerView.NO_POSITION && addListener != null) {
+                    addListener.onItemClick(getSnapshots().getSnapshot(position), position, v);
                 }
             });
+
+            fabRedact.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && redactListener != null) {
+                    redactListener.onItemClick(getSnapshots().getSnapshot(position), position, v);
+                }
+            });
+
         }
 
         public void bind(Cuenta model) {
@@ -157,12 +161,6 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
                 rec2.setAdapter(adapter);
                 rec2.setLayoutManager(new LinearLayoutManager(context));
 
-                // by clicking on a total card, admin increments the count value of the product
-                adapter.setIncrementor((snapshot, position, view) -> App.executor.submit(new CuentaItemPlusOne(snapshot, adapter, position, handler)));
-
-                // by clicking on a count card, admin decrements the count value of the product
-                adapter.setDecrementor(((snapshot, position, view) -> App.executor.submit(new CuentaItemDecremenator(snapshot, position, adapter, handler))));
-
                 // apart from setting up the adapter, we must calculate the total sum of the bill
                 // and make it responsive to changes within the bill
                 // to do that, we listen to the cuenta collection and iterate through its products an add their total price (count * unit price)
@@ -195,11 +193,13 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
         }
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    public void setOnAddClickListener(OnItemClickListener addListener) {
+        this.addListener = addListener;
     }
 
     public void setOnItemLongClickListener(OnItemLongClickListener longListener) {
         this.longListener = longListener;
     }
+
+    public void setOnRedactClickListener(OnItemClickListener redactListener) {this.redactListener = redactListener;}
 }

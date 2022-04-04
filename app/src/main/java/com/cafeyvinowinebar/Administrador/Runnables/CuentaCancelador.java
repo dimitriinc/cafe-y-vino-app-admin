@@ -226,11 +226,7 @@ public class CuentaCancelador implements Runnable {
 
                             // the mesa is one of the fixed ones
                             // at cancellation we must set the presence state to false
-                            try {
-                                mesasViewModel.getMesaById(mesaId.intValue()).setPresent(false);
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            mesasViewModel.setPresence(mesaId.intValue(), false);
                             break;
                         }
                     }

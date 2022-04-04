@@ -2,6 +2,7 @@ package com.cafeyvinowinebar.Administrador;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterCustomUsuarios;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterUsuarios;
 import com.cafeyvinowinebar.Administrador.Fragments.UserSearcher;
+import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.POJOs.Usuario;
 import com.cafeyvinowinebar.Administrador.Runnables.MesaInCuentaChanger;
 import com.cafeyvinowinebar.Administrador.Runnables.MesaSetter;
@@ -31,19 +34,22 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Displays the list of the customers with the 'present' status
  * Admin can change their assigned table of send a message on click
  * Or change their status to 'not present" on long click
- *
+ * <p>
  * The sliding panel allows for the search of any user registered with the FirebaseAuth
  * If the user is registered, his ID and Email are displayed
  * On click admin can view the customer's consumption history or send them a message
  */
 
 public class UsuariosActivity extends AppCompatActivity {
+
+    private static final String TAG = "UsuariosActivity";
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private final FirebaseMessaging fMessaging = FirebaseMessaging.getInstance();
@@ -58,19 +64,26 @@ public class UsuariosActivity extends AppCompatActivity {
     private EditText edtUserName;
     private UserSearcher fragment;
     private MesasViewModel mesasViewModel;
+    private LiveData<List<MesaEntity>> presentMesas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuarios);
 
-        init();
+        try {
+            init();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         slidingLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 imgSlidingUsuarios.setAlpha(1 - slideOffset);
             }
+
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
 
@@ -182,15 +195,16 @@ public class UsuariosActivity extends AppCompatActivity {
 
     }
 
-    private void setupCustomAdapter() throws ExecutionException, InterruptedException {
+    private void setupCustomAdapter() {
 
+        AdapterCustomUsuarios adapter = new AdapterCustomUsuarios(this, mesasViewModel);
         recCustomUsuarios.setLayoutManager(new LinearLayoutManager(this));
-        AdapterCustomUsuarios adapter = new AdapterCustomUsuarios(this);
         recCustomUsuarios.setAdapter(adapter);
-        mesasViewModel.getPresentMesas().observe(this, adapter::submitList);
+        presentMesas.observe(this, adapter::submitList);
+
     }
 
-    private void init() {
+    private void init() throws ExecutionException, InterruptedException {
 
         currentDate = Utils.getCurrentDate();
         recUsarios = findViewById(R.id.recUsarios);
@@ -200,6 +214,7 @@ public class UsuariosActivity extends AppCompatActivity {
         btnBuscarUsuarios = findViewById(R.id.btnBuscarUsuarios);
         edtUserName = findViewById(R.id.edtUserName);
         mesasViewModel = new ViewModelProvider(this).get(MesasViewModel.class);
+        presentMesas = mesasViewModel.getPresentMesas();
     }
 
     @Override

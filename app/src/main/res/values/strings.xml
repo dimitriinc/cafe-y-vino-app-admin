@@ -25,7 +25,7 @@
     <string name="asignar_mesa">Asignar una mesa</string>
     <string name="usarios_no_mesa">El campo está vacio</string>
     <string name="cliente">Cliente</string>
-    <string name="redaction_title">%1$s - %2$s</string>
+    <string name="redaction_title">%1$s - Mesa %2$s</string>
 
     <string name="email">email</string>
     <string name="contraseña">contraseña</string>

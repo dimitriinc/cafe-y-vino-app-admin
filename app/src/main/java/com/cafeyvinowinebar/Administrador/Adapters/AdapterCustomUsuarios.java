@@ -30,10 +30,12 @@ import java.util.concurrent.ExecutionException;
 public class AdapterCustomUsuarios extends ListAdapter<MesaEntity, AdapterCustomUsuarios.ViewHolder> {
 
     private final Context context;
+    private final MesasViewModel viewModel;
 
-    public AdapterCustomUsuarios(Context context) {
+    public AdapterCustomUsuarios(Context context, MesasViewModel viewModel) {
         super(DIFF_CALLBACK);
         this.context = context;
+        this.viewModel = viewModel;
     }
 
     private static final DiffUtil.ItemCallback<MesaEntity> DIFF_CALLBACK = new DiffUtil.ItemCallback<MesaEntity>() {
@@ -97,10 +99,11 @@ public class AdapterCustomUsuarios extends ListAdapter<MesaEntity, AdapterCustom
 
                     }
                 });
+                builder.create().show();
             });
 
             itemView.setOnLongClickListener(v -> {
-                getItem(getAbsoluteAdapterPosition()).setPresent(false);
+                viewModel.setPresence(getItem(getAbsoluteAdapterPosition()).getId(), false);
                 return true;
             });
         }

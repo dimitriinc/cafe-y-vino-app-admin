@@ -20,7 +20,6 @@ import com.cafeyvinowinebar.Administrador.POJOs.ItemShort;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
 import com.cafeyvinowinebar.Administrador.R;
-import com.cafeyvinowinebar.Administrador.Runnables.ItemPedidoDecrementor;
 import com.cafeyvinowinebar.Administrador.Runnables.PedidoToCuentaMover;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -28,7 +27,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -39,7 +37,7 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
     private final Context context;
     public String currentDate;
     private OnItemLongClickListener longListener;
-    private OnItemClickListener listener, redactListener;
+    private OnItemClickListener addListener, redactListener;
     public String mode;
 
     public AdapterPedidos(@NonNull FirestoreRecyclerOptions<Mesa> options, Context context,
@@ -100,8 +98,8 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
 
             fabAdd.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onItemClick(getSnapshots().getSnapshot(position), position, v);
+                if (position != RecyclerView.NO_POSITION && addListener != null) {
+                    addListener.onItemClick(getSnapshots().getSnapshot(position), position, v);
                 }
             });
 
@@ -171,12 +169,6 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
                 downRecView.setAdapter(adapter);
                 downRecView.setLayoutManager(new LinearLayoutManager(context));
 
-                // with a click on a count card, admin can increment the count value of the product
-                adapter.setIncrementor((snapshot, position1, view) -> snapshot.getReference().update(Utils.KEY_COUNT, FieldValue.increment(1)));
-
-                // with a click on a name card, admin decrements the count value of the product
-                adapter.setDecremenator(((snapshot, position1, view) -> App.executor.submit(new ItemPedidoDecrementor(snapshot))));
-
                 adapter.startListening();
                 TransitionManager.beginDelayedTransition(parent);
                 layDown.setVisibility(View.VISIBLE);
@@ -194,8 +186,8 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
         this.longListener = longListener;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    public void setOnAddClickListener(OnItemClickListener addListener) {
+        this.addListener = addListener;
     }
 
     public void setOnRedactClickListener(OnItemClickListener redactListener) {

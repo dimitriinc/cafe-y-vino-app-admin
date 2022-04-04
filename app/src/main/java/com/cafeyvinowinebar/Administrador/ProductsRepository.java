@@ -16,7 +16,6 @@ public class ProductsRepository {
 
     private final ProductDao productDao;
     private final LiveData<List<ProductEntity>> products;
-    ProductEntity product;
 
     public ProductsRepository(Application application) {
         ProductsDatabase database = ProductsDatabase.getInstance(application);

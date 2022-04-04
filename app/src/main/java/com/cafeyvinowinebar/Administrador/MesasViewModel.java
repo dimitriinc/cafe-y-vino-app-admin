@@ -42,4 +42,8 @@ public class MesasViewModel extends AndroidViewModel {
     public LiveData<List<MesaEntity>> getPresentMesas() throws ExecutionException, InterruptedException {return repository.getPresentMesas();}
 
     public MesaEntity getMesaById(int id) throws ExecutionException, InterruptedException {return repository.getMesaByID(id);}
+
+    public void setPresence(int id, boolean isPresent) {
+        repository.setPresence(id, isPresent);
+    }
 }

@@ -1,6 +1,7 @@
 package com.cafeyvinowinebar.Administrador;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,13 +23,15 @@ public class RedactViewModel extends AndroidViewModel {
         products = repo.getAllProducts();
     }
 
-    public LiveData<List<RedactEntity>> getProducts() {
+    public LiveData<List<RedactEntity>> getAllProducts() {
         return products;
     }
 
     public void redact(String name, long count) {repo.redact(name, count);}
 
-    public void insert(RedactEntity product) {repo.insert(product);}
+    public void insert(RedactEntity product) {
+        repo.insert(product);
+    }
 
     public void deleteAll() {repo.deleteAll();}
 }

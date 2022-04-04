@@ -38,7 +38,8 @@ public class AdapterRedact extends ListAdapter<RedactEntity, AdapterRedact.ViewH
         public boolean areContentsTheSame(@NonNull RedactEntity oldItem, @NonNull RedactEntity newItem) {
             return oldItem.getCategory().equals(newItem.getCategory()) &&
                     oldItem.getPrice() == newItem.getPrice() &&
-                    oldItem.getCount() == newItem.getCount();
+                    oldItem.getCount() == newItem.getCount() &&
+                    oldItem.getTotal() == newItem.getTotal();
         }
     };
 

@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterCuentas;
 import com.cafeyvinowinebar.Administrador.Fragments.DatePicker;
+import com.cafeyvinowinebar.Administrador.Fragments.Redact;
 import com.cafeyvinowinebar.Administrador.POJOs.Cuenta;
 import com.cafeyvinowinebar.Administrador.Runnables.CollectionDeleter;
 import com.cafeyvinowinebar.Administrador.Runnables.NewItemCuentaAdder;
@@ -144,7 +143,7 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
             dialog.show();
         }));
 
-        adapter.setOnItemClickListener(((snapshot, position, view) -> {
+        adapter.setOnAddClickListener(((snapshot, position, view) -> {
 
             // the on click listener is set to the add new product button
             // we build an alert dialog to create a new product
@@ -180,6 +179,14 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
             });
             builder.create().show();
         }));
+
+        adapter.setOnRedactClickListener((snapshot, position, view) -> fStore.collection(snapshot.getReference().getPath() + "/cuenta").get()
+                .addOnSuccessListener(App.executor, queryDocumentSnapshots -> new Redact(
+                        queryDocumentSnapshots.getDocuments(),
+                        snapshot.getString(Utils.KEY_NAME),
+                        snapshot.getString(Utils.KEY_MESA),
+                        Utils.CUENTAS
+                ).show(getSupportFragmentManager(), "redaction")));
     }
 
     @Override
