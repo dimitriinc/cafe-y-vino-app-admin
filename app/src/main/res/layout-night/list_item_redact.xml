@@ -43,6 +43,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/redactName"
             android:layout_width="wrap_content"
+            android:layout_toStartOf="@+id/fabRedactDecrement"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
@@ -56,6 +57,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/andada"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:padding="10dp"
                 tools:text="Gin Tonic Premio Boticario"
                 android:textColor="@color/white"

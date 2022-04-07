@@ -1,11 +1,8 @@
 package com.cafeyvinowinebar.Administrador.Runnables;
 
-import android.annotation.SuppressLint;
-
 import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.POJOs.ProductEntity;
 import com.cafeyvinowinebar.Administrador.Utils;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -13,7 +10,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,9 +26,9 @@ public class PedidoCreator implements Runnable {
 
     private final String currentDate, mesa;
     private final List<ProductEntity> canasta;
-    private int mesaId;
+    private String mesaId;
 
-    public PedidoCreator(String currentDate, String mesa, List<ProductEntity> canasta, int mesaId) {
+    public PedidoCreator(String currentDate, String mesa, List<ProductEntity> canasta, String mesaId) {
         this.currentDate = currentDate;
         this.mesa = mesa;
         this.mesaId = mesaId;
@@ -79,7 +75,7 @@ public class PedidoCreator implements Runnable {
         doc.put(Utils.SERVIDO_COCINA, servidoCocina);
         doc.put(Utils.KEY_USER, "Cliente");
         doc.put(Utils.KEY_USER_ID, mesa);
-        doc.put(Utils.MESA_ID, (long) mesaId);
+        doc.put(Utils.MESA_ID, mesaId);
         doc.put(Utils.TIMESTAMP, new Timestamp(new Date()));
 
         metaDoc.set(doc).addOnSuccessListener(App.executor, unused ->

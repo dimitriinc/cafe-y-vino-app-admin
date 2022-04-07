@@ -8,15 +8,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterPedidos;
 import com.cafeyvinowinebar.Administrador.Fragments.Redact;
-import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
+import com.cafeyvinowinebar.Administrador.POJOs.Pedido;
+import com.cafeyvinowinebar.Administrador.Runnables.EliminationApplier;
 import com.cafeyvinowinebar.Administrador.Runnables.NewItemPedidoAdder;
 import com.cafeyvinowinebar.Administrador.Runnables.CollectionDeleter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -35,8 +39,6 @@ import com.google.firebase.firestore.Query;
  * And the implementation of the on click listeners
  */
 public class PedidosTodoActivity extends AppCompatActivity {
-
-    public static final String KEY_REDACT = "keyRedact";
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
@@ -85,8 +87,8 @@ public class PedidosTodoActivity extends AppCompatActivity {
 
         }
 
-        FirestoreRecyclerOptions<Mesa> options = new FirestoreRecyclerOptions.Builder<Mesa>()
-                .setQuery(query, Mesa.class)
+        FirestoreRecyclerOptions<Pedido> options = new FirestoreRecyclerOptions.Builder<Pedido>()
+                .setQuery(query, Pedido.class)
                 .build();
 
         adapter = new AdapterPedidos(options, getBaseContext(), currentDate, mode);
@@ -129,12 +131,34 @@ public class PedidosTodoActivity extends AppCompatActivity {
         if (mode.equals(Utils.TODO)) {
             adapter.setOnItemLongClickListener((snapshot, position, v) -> {
 
-                // show an alert dialog to make sure admin wants to delete the order
+                // on long click we build an alert dialog before deleting the whole order
+                // dialog prompts admin to type in a reason for deletion
+                // then on a background thread we construct a redaction and store it into the Firestore, then delete the order
+                View eliminarView = getLayoutInflater().inflate(R.layout.dialog_eliminacion, null);
+                EditText edtEliminar = eliminarView.findViewById(R.id.edtEliminar);
+                FloatingActionButton fabEliminar = eliminarView.findViewById(R.id.fabEliminar);
+
                 AlertDialog dialog = new AlertDialog.Builder(PedidosTodoActivity.this)
-                        .setTitle(getString(R.string.eliminar_question))
-                        .setPositiveButton(getString(R.string.confirmar), (dialog1, which) ->
-                                App.executor.submit(new CollectionDeleter(snapshot, "/pedido")))
+                        .setView(eliminarView)
                         .create();
+
+                fabEliminar.setOnClickListener(view -> {
+
+                    String comment = edtEliminar.getText().toString().trim();
+                    if (comment.isEmpty()) {
+                        comment = "sin comentario";
+                    }
+                    App.executor.submit(new EliminationApplier(
+                            snapshot.getString(Utils.KEY_USER),
+                            snapshot.getString(Utils.KEY_MESA),
+                            comment,
+                            snapshot.getReference().getPath() + "/pedido"));
+
+                    snapshot.getReference().delete();
+                    dialog.dismiss();
+
+                });
+
                 dialog.show();
             });
         }
@@ -174,6 +198,9 @@ public class PedidosTodoActivity extends AppCompatActivity {
      */
     private void showAddProductDialog(String mode, DocumentSnapshot documentSnapshot) {
 
+        boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(PedidosTodoActivity.this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_new_item, null);
         EditText nombreEt = dialogView.findViewById(R.id.etNewItemCuentaNombre);
@@ -202,7 +229,15 @@ public class PedidosTodoActivity extends AppCompatActivity {
             ));
         }
 
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        if (isDarkThemeOn) {
+            Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            btnPositive.setTextColor(getColor(R.color.white));
+            Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            btnNegative.setTextColor(getColor(R.color.white));
+        }
     }
 
     /**

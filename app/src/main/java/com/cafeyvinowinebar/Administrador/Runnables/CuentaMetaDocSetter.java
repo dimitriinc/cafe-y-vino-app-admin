@@ -16,10 +16,9 @@ public class CuentaMetaDocSetter implements Runnable {
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
-    private final String userName, userMesa, userId, currentDate;
-    private final Long mesaId;
+    private final String userName, userMesa, userId, currentDate, mesaId;
 
-    public CuentaMetaDocSetter(String userName, String userMesa, String userId, String currentDate, Long mesaId) {
+    public CuentaMetaDocSetter(String userName, String userMesa, String userId, String currentDate, String mesaId) {
         this.userName = userName;
         this.userMesa = userMesa;
         this.userId = userId;

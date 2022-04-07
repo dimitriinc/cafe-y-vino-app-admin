@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_rectangular">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eliminar_question"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:textSize="30sp"
+        android:fontFamily="@font/andada"
+        android:id="@+id/txtEliminar"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtEliminar"
+        android:hint="@string/reserva_comentario"
+        android:layout_below="@+id/txtEliminar"
+        android:padding="10dp"
+        android:fontFamily="@font/andada"
+        android:background="@drawable/shape_for_et"
+        android:layout_marginHorizontal="5dp"
+        android:inputType="textMultiLine"
+        android:lines="3"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtEliminar"
+        android:src="@drawable/ic_ok"
+        android:layout_margin="16dp"
+        android:layout_centerHorizontal="true"
+        app:maxImageSize="50dp"
+        app:fabCustomSize="75dp"
+        android:id="@+id/fabEliminar"/>
+
+
+
+</RelativeLayout>

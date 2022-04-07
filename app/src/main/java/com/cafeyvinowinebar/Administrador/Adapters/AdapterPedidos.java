@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemClickListener;
 import com.cafeyvinowinebar.Administrador.POJOs.ItemShort;
-import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
+import com.cafeyvinowinebar.Administrador.POJOs.Pedido;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Runnables.PedidoToCuentaMover;
@@ -30,7 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedidos.PedidoOneViewHolder> {
+public class AdapterPedidos extends FirestoreRecyclerAdapter<Pedido, AdapterPedidos.PedidoOneViewHolder> {
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
@@ -40,7 +40,7 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
     private OnItemClickListener addListener, redactListener;
     public String mode;
 
-    public AdapterPedidos(@NonNull FirestoreRecyclerOptions<Mesa> options, Context context,
+    public AdapterPedidos(@NonNull FirestoreRecyclerOptions<Pedido> options, Context context,
                           String currentDate, String mode) {
         super(options);
         this.context = context;
@@ -50,7 +50,7 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull PedidoOneViewHolder holder, int position, @NonNull Mesa model) {
+    protected void onBindViewHolder(@NonNull PedidoOneViewHolder holder, int position, @NonNull Pedido model) {
         holder.bind(model, position);
     }
 
@@ -114,7 +114,7 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Mesa, AdapterPedido
         /**
          * In the expanded mode the list item displays a nested recycler view containing the pedido collection
          */
-        public void bind(Mesa model, int position) {
+        public void bind(Pedido model, int position) {
             Query query;
 
             txtPedidoId.setText(context.getString(R.string.pedido_title, model.getUser(), model.getMesa()));

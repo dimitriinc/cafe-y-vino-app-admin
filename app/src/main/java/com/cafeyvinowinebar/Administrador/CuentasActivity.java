@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,8 +25,10 @@ import com.cafeyvinowinebar.Administrador.Fragments.DatePicker;
 import com.cafeyvinowinebar.Administrador.Fragments.Redact;
 import com.cafeyvinowinebar.Administrador.POJOs.Cuenta;
 import com.cafeyvinowinebar.Administrador.Runnables.CollectionDeleter;
+import com.cafeyvinowinebar.Administrador.Runnables.EliminationApplier;
 import com.cafeyvinowinebar.Administrador.Runnables.NewItemCuentaAdder;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -135,15 +140,40 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
         adapter.setOnItemLongClickListener(((snapshot, position, view) -> {
 
             // on long click we build an alert dialog before deleting the whole bill
+            // dialog prompts admin to type in a reason for deletion
+            // then on a background thread we construct a redaction and store it into the Firestore, then delete the bill
+            View eliminarView = getLayoutInflater().inflate(R.layout.dialog_eliminacion, null);
+            EditText edtEliminar = eliminarView.findViewById(R.id.edtEliminar);
+            FloatingActionButton fabEliminar = eliminarView.findViewById(R.id.fabEliminar);
+
             AlertDialog dialog = new AlertDialog.Builder(CuentasActivity.this)
-                    .setTitle("Eliminar?")
-                    .setPositiveButton(getString(R.string.confirmar), (dialog1, which) ->
-                            App.executor.submit(new CollectionDeleter(snapshot, "/cuenta")))
+                    .setView(eliminarView)
                     .create();
+
+            fabEliminar.setOnClickListener(v -> {
+
+                String comment = edtEliminar.getText().toString().trim();
+                if (comment.isEmpty()) {
+                    comment = "sin comentario";
+                }
+                App.executor.submit(new EliminationApplier(
+                        snapshot.getString(Utils.KEY_NAME),
+                        snapshot.getString(Utils.KEY_MESA),
+                        comment,
+                        snapshot.getReference().getPath() + "/cuenta"));
+
+                snapshot.getReference().delete();
+                dialog.dismiss();
+
+            });
+
             dialog.show();
         }));
 
         adapter.setOnAddClickListener(((snapshot, position, view) -> {
+
+            boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES;
 
             // the on click listener is set to the add new product button
             // we build an alert dialog to create a new product
@@ -177,7 +207,16 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
 
                 App.executor.submit(new NewItemCuentaAdder(name, path, count, price));
             });
-            builder.create().show();
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // make buttons more visible in the dark mode
+            if (isDarkThemeOn) {
+                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                btnPositive.setTextColor(getColor(R.color.white));
+                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                btnNegative.setTextColor(getColor(R.color.white));
+            }
         }));
 
         adapter.setOnRedactClickListener((snapshot, position, view) -> fStore.collection(snapshot.getReference().getPath() + "/cuenta").get()

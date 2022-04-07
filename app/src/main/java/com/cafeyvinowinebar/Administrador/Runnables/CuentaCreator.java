@@ -26,13 +26,12 @@ public class CuentaCreator implements Runnable {
     private final DocumentReference reference;
     private final CountDownLatch latch;
     private final String name;
-    public String userName, userMesa, userId, currentDate;
+    public String userName, userMesa, userId, currentDate, mesaId;
     private final long price, count;
-    public Long mesaId;
 
     public CuentaCreator(DocumentReference reference, CountDownLatch latch, String name,
                          String userName, String userMesa, String userId, String currentDate,
-                         long price, long count, Long mesaId) {
+                         long price, long count, String mesaId) {
 
         this.reference = reference;
         this.latch = latch;

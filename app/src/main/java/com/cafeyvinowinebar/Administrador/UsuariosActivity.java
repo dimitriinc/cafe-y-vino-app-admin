@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterCustomUsuarios;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterUsuarios;
 import com.cafeyvinowinebar.Administrador.Fragments.UserSearcher;
+import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.POJOs.Usuario;
 import com.cafeyvinowinebar.Administrador.Runnables.MesaInCuentaChanger;
@@ -56,15 +55,14 @@ public class UsuariosActivity extends AppCompatActivity {
 
     private RecyclerView recUsarios;
     private RecyclerView recCustomUsuarios;
-    private AdapterUsuarios adapter;
+    private AdapterUsuarios adapterClients;
+    private AdapterCustomUsuarios adapterCustom;
     String currentDate;
     private SlidingUpPanelLayout slidingLayout;
     private ImageView imgSlidingUsuarios;
     private MaterialButton btnBuscarUsuarios;
     private EditText edtUserName;
     private UserSearcher fragment;
-    private MesasViewModel mesasViewModel;
-    private LiveData<List<MesaEntity>> presentMesas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +93,10 @@ public class UsuariosActivity extends AppCompatActivity {
             slidingLayout.setPanelHeight(90);
         }
 
-        // sets the recycler view on the main screen
-        setupAdapter();
+        // sets the recycler view for the users of the client app, that are present in the restaurant
+        setupClientsAdapter();
 
-        // sets the recycler view for the custom tables
+        // sets the recycler view for the custom tables, that are present in the restaurant
         setupCustomAdapter();
 
         // searches customers on the sliding panel
@@ -118,7 +116,7 @@ public class UsuariosActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void setupAdapter() {
+    private void setupClientsAdapter() {
 
         Query query = fStore.collection(Utils.USUARIOS)
                 .whereEqualTo(Utils.IS_PRESENT, true)
@@ -128,10 +126,10 @@ public class UsuariosActivity extends AppCompatActivity {
                 .setQuery(query, Usuario.class)
                 .build();
 
-        adapter = new AdapterUsuarios(options);
-        recUsarios.setAdapter(adapter);
+        adapterClients = new AdapterUsuarios(options);
+        recUsarios.setAdapter(adapterClients);
         recUsarios.setLayoutManager(new LinearLayoutManager(this));
-        adapter.setOnItemClickListener((snapshot, position, v) -> {
+        adapterClients.setOnItemClickListener((snapshot, position, v) -> {
 
             String token = snapshot.getString(Utils.KEY_TOKEN);
 
@@ -191,16 +189,21 @@ public class UsuariosActivity extends AppCompatActivity {
         });
 
         // we update the customer's status to 'not present'
-        adapter.setOnItemLongClickListener((snapshot, position, v) -> App.executor.submit(new PresenceChanger(snapshot)));
+        adapterClients.setOnItemLongClickListener((snapshot, position, v) -> App.executor.submit(new PresenceChanger(snapshot)));
 
     }
 
     private void setupCustomAdapter() {
 
-        AdapterCustomUsuarios adapter = new AdapterCustomUsuarios(this, mesasViewModel);
+        Query query = fStore.collection("mesas")
+                .whereEqualTo("present", true)
+                .orderBy(Utils.KEY_NAME);
+        FirestoreRecyclerOptions<Mesa> options = new FirestoreRecyclerOptions.Builder<Mesa>()
+                .setQuery(query, Mesa.class)
+                .build();
+        adapterCustom = new AdapterCustomUsuarios(options, this);
         recCustomUsuarios.setLayoutManager(new LinearLayoutManager(this));
-        recCustomUsuarios.setAdapter(adapter);
-        presentMesas.observe(this, adapter::submitList);
+        recCustomUsuarios.setAdapter(adapterCustom);
 
     }
 
@@ -213,20 +216,21 @@ public class UsuariosActivity extends AppCompatActivity {
         imgSlidingUsuarios = findViewById(R.id.imgSlidingUsuarios);
         btnBuscarUsuarios = findViewById(R.id.btnBuscarUsuarios);
         edtUserName = findViewById(R.id.edtUserName);
-        mesasViewModel = new ViewModelProvider(this).get(MesasViewModel.class);
-        presentMesas = mesasViewModel.getPresentMesas();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+        adapterClients.startListening();
+        adapterCustom.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+        adapterClients.stopListening();
+        adapterCustom.stopListening();
     }
 
 }

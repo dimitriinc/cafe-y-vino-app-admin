@@ -3,6 +3,7 @@ package com.cafeyvinowinebar.Administrador.Runnables;
 import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,7 +39,7 @@ public class CuentaCancelador implements Runnable {
     private String userId;
     private String userMesa;
     private String userName;
-    private Long mesaId;
+    private String mesaId;
     private final String payType;
     private MesasViewModel mesasViewModel;
 
@@ -70,7 +71,7 @@ public class CuentaCancelador implements Runnable {
         userId = snapshot.getId();
         userMesa = snapshot.getString(Utils.KEY_MESA);
         userName = snapshot.getString(Utils.KEY_NAME);
-        mesaId = snapshot.getLong(Utils.MESA_ID);
+        mesaId = snapshot.getString(Utils.MESA_ID);
         total = 0;
 
         // to calculate the total sum of the bill we get the cuenta collection and iterate through its documents
@@ -217,22 +218,18 @@ public class CuentaCancelador implements Runnable {
 
                 } else {
                     // the cuenta belongs to a custom user
-                    // in this case we should delete the entity from the 'mesa' table in the SQLiteDB
-                    // but only if the entity is not one of the fixed mesas (01 - 12)
-                    boolean mesaIsFixed = false;
-                    for (String table : Utils.FIXED_MESAS) {
-                        if (userMesa.equals(table)) {
-                            mesaIsFixed = true;
+                    // in this case we should delete the document from Firestore, if it's not one of the fixed tables
+                    // if it's fixed, we update its presence status
 
-                            // the mesa is one of the fixed ones
-                            // at cancellation we must set the presence state to false
-                            mesasViewModel.setPresence(mesaId.intValue(), false);
-                            break;
-                        }
-                    }
-                    if (!mesaIsFixed) {
-                        mesasViewModel.deleteByName(userMesa);
-                    }
+                    fStore.collection("mesas").document(mesaId).get()
+                            .addOnSuccessListener(App.executor, documentSnapshot -> {
+
+                                if (!documentSnapshot.getBoolean("fixed")) {
+                                    documentSnapshot.getReference().delete();
+                                } else {
+                                    documentSnapshot.getReference().update("present", false);
+                                }
+                            });
                 }
 
                 // copy the item to the cuenta cancelada collection, and then delete it

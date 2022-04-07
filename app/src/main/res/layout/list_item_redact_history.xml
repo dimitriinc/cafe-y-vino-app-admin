@@ -19,9 +19,21 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            tools:text="Edicion"
+            android:gravity="center_horizontal"
+            android:id="@+id/txtRedactionType"
+            android:paddingTop="10dp"
+            android:fontFamily="@font/alegreya_sc"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/txtRedactHistoryTitle"
             tools:text="Cliente - 08"
             android:textSize="18sp"
+            android:layout_below="@+id/txtRedactionType"
             android:textStyle="bold"
             android:padding="10dp"
             android:fontFamily="@font/andada"

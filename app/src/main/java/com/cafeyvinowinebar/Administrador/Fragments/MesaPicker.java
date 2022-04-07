@@ -18,12 +18,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterMesas;
+import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.NewPedidoActivity;
+import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Utils;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 /**
  * Displays the list of tables as a recycler view
@@ -35,17 +42,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class MesaPicker extends DialogFragment {
 
-    private MesasViewModel mesasViewModel;
+    private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        // get the view model for the fragment
-        mesasViewModel = new ViewModelProvider(this).get(MesasViewModel.class);
-        return super.onCreateDialog(savedInstanceState);
-
-    }
+    private AdapterMesas adapter;
 
     @Nullable
     @Override
@@ -69,34 +68,58 @@ public class MesaPicker extends DialogFragment {
             fabOkNewMesa.setOnClickListener(view11 -> {
 
                 // get the name of the new table
-                String newMesa = edtNewMesa.getText().toString().trim();
-                if (newMesa.isEmpty()) {
+                String newMesaName = edtNewMesa.getText().toString().trim();
+                if (newMesaName.isEmpty()) {
                     Toast.makeText(getContext(), R.string.llenar_los_campos, Toast.LENGTH_SHORT).show();
                 } else {
 
-                    // create a new mesa entity and insert it into the mesas table
-                    MesaEntity mesa = new MesaEntity(newMesa, false);
-                    int mesaId = mesa.getId();
-                    mesasViewModel.insert(mesa);
+                    // add a new mesa to the Firestore collection
+                    // when it's added, we can go construct a new pedido
+                    // we wait for success of the write to know the id of the new mesa
+                    fStore.collection("mesas").add(new Mesa(false, false, false, newMesaName))
+                            .addOnSuccessListener(App.executor, documentReference -> {
 
-                    // dismiss the alert dialog and the dialog fragment
-                    dialog.dismiss();
-                    dismiss();
+                                // go to the NewPedidoActivity with the name of the new table, and its id (to change the presence status of the mesa later)
+                                startActivity(NewPedidoActivity.newIntent(getContext(), newMesaName, documentReference.getId()));
 
-                    // go to the NewPedidoActivity with the name of the new table
-                    startActivity(NewPedidoActivity.newIntent(getContext(), newMesa, mesaId));
+                                // dismiss the alert dialog and the dialog fragment
+                                dialog.dismiss();
+                                dismiss();
+                            });
                 }
             });
             dialog.show();
         });
 
+        Query query = fStore.collection("mesas")
+                .orderBy(Utils.KEY_NAME);
+        FirestoreRecyclerOptions<Mesa> options = new FirestoreRecyclerOptions.Builder<Mesa>()
+                .setQuery(query, Mesa.class)
+                .build();
+
+        adapter = new AdapterMesas(options, getContext());
         recMesas.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        final AdapterMesas adapter = new AdapterMesas(getContext(), mesasViewModel);
         recMesas.setAdapter(adapter);
 
-        // start observing the live data
-        mesasViewModel.getMesas().observe(this, adapter::submitList);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismiss();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

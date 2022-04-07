@@ -102,19 +102,21 @@ public class RedactHIstoryActivity extends AppCompatActivity {
 
     private class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView txtTitle, txtComment;
+        private final TextView txtTitle, txtComment, txtType;
         private final RecyclerView recChanges;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtTitle = itemView.findViewById(R.id.txtRedactHistoryTitle);
             txtComment = itemView.findViewById(R.id.txtRedactComment);
+            txtType = itemView.findViewById(R.id.txtRedactionType);
             recChanges = itemView.findViewById(R.id.recRedactChanges);
         }
 
         private void bind(Redaction model) {
-            txtTitle.setText(getString(R.string.redaction_title, model.getUserName(), model.getMesa()));
+            txtTitle.setText(getString(R.string.redaction_title, model.getUserName(), model.getMesa(), model.getTime()));
             txtComment.setText(model.getComment());
+            txtType.setText(model.getType());
 
             // the details of the redaction are stored as a map, with each key-value pair representing one change
             // so to display those changes as a recycler view, we need to convert the map to a list

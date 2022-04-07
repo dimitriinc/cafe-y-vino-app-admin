@@ -120,4 +120,10 @@ public class Redact extends DialogFragment {
         viewModel.getAllProducts().observe(this, adapter::submitList);
 
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        viewModel.deleteAll();
+    }
 }

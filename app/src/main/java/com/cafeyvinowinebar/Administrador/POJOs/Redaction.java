@@ -7,16 +7,18 @@ import java.util.Map;
 public class Redaction {
 
     Map<String, String> changes;
-    String comment;
+    String comment, time, type;
     String userName, mesa;
     Timestamp timestamp;
 
-    public Redaction(Map<String, String> changes, String comment, String userName, String mesa, Timestamp timestamp) {
+    public Redaction(Map<String, String> changes, String comment, String userName, String mesa, Timestamp timestamp, String time, String type) {
         this.changes = changes;
         this.comment = comment;
         this.userName = userName;
         this.mesa = mesa;
         this.timestamp = timestamp;
+        this.time = time;
+        this.type = type;
     }
 
     public Redaction() {}
@@ -59,5 +61,21 @@ public class Redaction {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

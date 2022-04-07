@@ -41,7 +41,7 @@ public class PedidoToCuentaMover implements Runnable {
         String userId = documentSnapshot.getString(Utils.KEY_USER_ID);
         String userName = documentSnapshot.getString(Utils.KEY_USER);
         String userMesa = documentSnapshot.getString(Utils.KEY_MESA);
-        Long mesaId = documentSnapshot.getLong(Utils.MESA_ID);
+        String mesaId = documentSnapshot.getString(Utils.MESA_ID);
 
         // get a reference to the pedido's collection
         CollectionReference pedido = fStore.collection(documentSnapshot.getReference().getPath() + "/pedido");

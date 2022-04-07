@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,7 +31,6 @@ import com.google.firebase.firestore.Query;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Has a main screen and a sliding panel
@@ -50,11 +51,10 @@ public class NewPedidoActivity extends AppCompatActivity {
     private AdapterMenu adapterMenu;
     private FloatingActionButton fabCanastaOk, fabCanastaNewItem;
     public ProductsViewModel productsViewModel;
-    private MesasViewModel mesasViewModel;
     FragmentManager manager;
-    String mesa, currentDate;
+    String mesa, currentDate, mesaId;
 
-    public static Intent newIntent(Context context, String mesa, int mesaId) {
+    public static Intent newIntent(Context context, String mesa, String mesaId) {
         Intent i = new Intent(context, NewPedidoActivity.class);
         i.putExtra(Utils.KEY_MESA, mesa);
         i.putExtra(Utils.MESA_ID, mesaId);
@@ -67,8 +67,7 @@ public class NewPedidoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_pedido);
 
         mesa = getIntent().getStringExtra(Utils.KEY_MESA);
-        int mesaId = getIntent().getIntExtra(Utils.MESA_ID, 0);
-
+        mesaId = getIntent().getStringExtra(Utils.MESA_ID);
         init();
 
         setupAdapterMenu();
@@ -100,7 +99,7 @@ public class NewPedidoActivity extends AppCompatActivity {
             productsViewModel.deleteAllProducts();
 
             // change the mesa's status to 'present'
-            mesasViewModel.setPresence(mesaId, true);
+            fStore.collection("mesas").document(mesaId).update("present", true);
 
             // return to the dialog fragment with the list of tables
             finish();
@@ -108,6 +107,10 @@ public class NewPedidoActivity extends AppCompatActivity {
         });
 
         fabCanastaNewItem.setOnClickListener(v -> {
+
+            boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES;
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_new_item, null);
             EditText nombreEt = dialogView.findViewById(R.id.etNewItemCuentaNombre);
@@ -138,8 +141,18 @@ public class NewPedidoActivity extends AppCompatActivity {
                 long count = Long.parseLong(countString);
                 productsViewModel.insert(new ProductEntity(name, Utils.BARRA, count, price));
             });
-            builder.setCancelable(true);
-            builder.create().show();
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // to make the alert dialog more readable in the dark theme
+            if (isDarkThemeOn) {
+                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                btnPositive.setTextColor(getColor(R.color.white));
+                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                btnNegative.setTextColor(getColor(R.color.white));
+            }
+
+
         });
     }
 
@@ -164,7 +177,6 @@ public class NewPedidoActivity extends AppCompatActivity {
         fabCanastaOk = findViewById(R.id.fabCanastaOk);
         fabCanastaNewItem = findViewById(R.id.fabCanastaNewItem);
         productsViewModel = new ViewModelProvider(this).get(ProductsViewModel.class);
-        mesasViewModel = new ViewModelProvider(this).get(MesasViewModel.class);
         currentDate = Utils.getCurrentDate();
     }
 

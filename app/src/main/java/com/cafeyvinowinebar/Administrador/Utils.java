@@ -1,6 +1,7 @@
 package com.cafeyvinowinebar.Administrador;
 
 import android.annotation.SuppressLint;
+import android.nfc.cardemulation.HostNfcFService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -91,6 +92,8 @@ public class Utils {
     public static final String KEY_USER = "user";
     public static final String TIMESTAMP = "timestamp";
     public static final String KEY_CONFIRMADO = "confirmado";
+    public static final String EDICION = "Edición";
+    public static final String ELIMINACION = "Eliminación";
 
     public static final String[] FIXED_MESAS = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
 

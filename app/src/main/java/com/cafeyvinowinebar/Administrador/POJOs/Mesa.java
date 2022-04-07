@@ -1,84 +1,48 @@
 package com.cafeyvinowinebar.Administrador.POJOs;
 
 public class Mesa {
-    String user, mesa, userId, count;
-    public boolean servido, servidoCocina, servidoBarra, isExpanded;
 
-    public Mesa(String user, String mesa, String userId, String count, boolean servido, boolean servidoCocina, boolean servidoBarra, boolean isExpanded) {
-        this.user = user;
-        this.mesa = mesa;
-        this.userId = userId;
-        this.count = count;
-        this.servido = servido;
-        this.servidoCocina = servidoCocina;
-        this.servidoBarra = servidoBarra;
-        this.isExpanded = isExpanded;
+    boolean isBlocked, isFixed, isPresent;
+    String name;
+
+    public Mesa(boolean isBlocked, boolean isFixed, boolean isPresent, String name) {
+        this.isBlocked = isBlocked;
+        this.isFixed = isFixed;
+        this.isPresent = isPresent;
+        this.name = name;
     }
 
-    public Mesa() {
+    public Mesa() {}
+
+    public boolean isBlocked() {
+        return isBlocked;
     }
 
-    public String getUser() {
-        return user;
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public boolean isFixed() {
+        return isFixed;
     }
 
-    public String getMesa() {
-        return mesa;
+    public void setFixed(boolean fixed) {
+        isFixed = fixed;
     }
 
-    public void setMesa(String mesa) {
-        this.mesa = mesa;
+    public boolean isPresent() {
+        return isPresent;
     }
 
-    public String getUserId() {
-        return userId;
+    public void setPresent(boolean present) {
+        isPresent = present;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getName() {
+        return name;
     }
 
-    public boolean isServido() {
-        return servido;
-    }
-
-    public void setServido(boolean servido) {
-        this.servido = servido;
-    }
-
-    public boolean isExpanded() {
-        return isExpanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        isExpanded = expanded;
-    }
-
-    public String getCount() {
-        return count;
-    }
-
-    public void setCount(String count) {
-        this.count = count;
-    }
-
-    public boolean isServidoCocina() {
-        return servidoCocina;
-    }
-
-    public void setServidoCocina(boolean servidoCocina) {
-        this.servidoCocina = servidoCocina;
-    }
-
-    public boolean isServidoBarra() {
-        return servidoBarra;
-    }
-
-    public void setServidoBarra(boolean servidoBarra) {
-        this.servidoBarra = servidoBarra;
+    public void setName(String name) {
+        this.name = name;
     }
 }

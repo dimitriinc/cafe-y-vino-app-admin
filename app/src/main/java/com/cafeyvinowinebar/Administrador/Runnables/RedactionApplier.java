@@ -9,7 +9,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,18 @@ public class RedactionApplier implements Runnable {
 
     @Override
     public void run() {
+
+        // first lets get the current time
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+        String amPm;
+        if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
+            amPm = "AM";
+        } else {
+            amPm = "PM";
+        }
+        String time = calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + amPm;
+
 
         // we prepare a map, were we will store all the changes
         // the map connects the name of the product with the numerical value of the change in its count
@@ -110,7 +124,7 @@ public class RedactionApplier implements Runnable {
         // we can store the redaction object, empty the SQLite table, and leave the fragment
         if (!changes.isEmpty()) {
             fStore.collection("cambios").document(Utils.getCurrentDate()).collection("cambios")
-                    .add(new Redaction(changes, comment, userName, mesa, new Timestamp(new Date())));
+                    .add(new Redaction(changes, comment, userName, mesa, new Timestamp(new Date()), time, Utils.EDICION));
         }
     }
 }

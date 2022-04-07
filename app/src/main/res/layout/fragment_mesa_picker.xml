@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/shape_rectangular">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddMesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/recMesas"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:layout_below="@+id/recMesas"
         android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/txtMesaPicker"
+        app:layout_constraintStart_toStartOf="@+id/txtMesaPicker"
         app:srcCompat="@drawable/ic_add" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recMesas"
         android:layout_width="wrap_content"
-        android:layout_below="@+id/txtMesaPicker"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_above="@+id/fabAddMesa"
+        android:layout_below="@+id/txtMesaPicker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/fabAddMesa"
+        app:layout_constraintEnd_toEndOf="@+id/txtMesaPicker"
+        app:layout_constraintStart_toStartOf="@+id/txtMesaPicker"
+        app:layout_constraintTop_toBottomOf="@+id/txtMesaPicker"
+        tools:listitem="@layout/list_item_reserva_model" />
 
     <TextView
         android:id="@+id/txtMesaPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
         android:fontFamily="@font/andada"
-        android:textSize="20sp"
         android:text="Escoge la mesa"
-        />
-</RelativeLayout>
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
