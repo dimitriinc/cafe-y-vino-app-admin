@@ -41,18 +41,15 @@ public class CuentaCancelador implements Runnable {
     private String userName;
     private String mesaId;
     private final String payType;
-    private MesasViewModel mesasViewModel;
 
-    public CuentaCancelador(DocumentSnapshot snapshot, String currentDate, String payType, MesasViewModel mesasViewModel) {
+    public CuentaCancelador(DocumentSnapshot snapshot, String currentDate, String payType) {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
-        this.mesasViewModel = mesasViewModel;
     }
 
     public CuentaCancelador(double montoEfectivo, double montoVisa, double montoYape,
-                            double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType,
-                            MesasViewModel mesasViewModel) {
+                            double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType) {
         this.montoEfectivo = montoEfectivo;
         this.montoVisa = montoVisa;
         this.montoYape = montoYape;
@@ -60,7 +57,6 @@ public class CuentaCancelador implements Runnable {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
-        this.mesasViewModel = mesasViewModel;
     }
 
     @Override
@@ -93,7 +89,7 @@ public class CuentaCancelador implements Runnable {
                     // next, we check if the cuenta belongs to a customer or not
                     // if it does, we need to update their personal doc, move data, and send a message
                     // if the cuenta belongs to a custom user, we just move data and delete the cuenta meta doc
-                    if (userMesa.equals(userId)) {
+                    if (userName.equals("Cliente")) {
 
                         moveData(userId, userName, total);
                         snapshot.getReference().delete();
@@ -122,6 +118,15 @@ public class CuentaCancelador implements Runnable {
 
                                     // after we moved the data, we delete the meta doc of the pending bill
                                     snapshot.getReference().delete();
+
+                                    // we also should update the 'blocked' status of the table if it's one of the fixed ones
+                                    // if the table assigned to the client was not one of the fixed, the mesaId will be null
+                                    // and we shouldn't worry about this step
+                                    if (mesaId != null) {
+                                        fStore.collection("mesas")
+                                                .document(mesaId)
+                                                .update("blocked", false);
+                                    }
 
                                     // get some personal data about the user
                                     String token = userDocumentSnapshot.getString(Utils.KEY_TOKEN);
@@ -194,7 +199,7 @@ public class CuentaCancelador implements Runnable {
 
                 // next operation depends on to whom belongs the bill: to a custom user, or a user of the app
                 // reminder: IDs of the bills of custom users correspond to the table number
-                if (!userMesa.equals(userId)) {
+                if (!userName.equals("Cliente")) {
                     // means the cuenta belongs to a user of the app
                     // in this case we store the product in the personal consumo collection of the user
                     // as we did with the total consumo collection, get a reference of a document with the item's name in the collection

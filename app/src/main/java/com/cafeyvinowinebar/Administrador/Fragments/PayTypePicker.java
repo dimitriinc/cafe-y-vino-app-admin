@@ -33,7 +33,6 @@ public class PayTypePicker extends DialogFragment {
     public DocumentSnapshot snapshot;
     public String currentDate;
     private final FragmentManager manager;
-    public MesasViewModel mesasViewModel;
 
     public PayTypePicker(DocumentSnapshot snapshot, String currentDate, FragmentManager manager) {
         this.snapshot = snapshot;
@@ -47,8 +46,6 @@ public class PayTypePicker extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pay_mode_picker, container);
 
-        mesasViewModel = new ViewModelProvider(requireActivity()).get(MesasViewModel.class);
-
         TextView txtCash = view.findViewById(R.id.txtPayEfectivo);
         TextView txtVisa = view.findViewById(R.id.txtPayVisa);
         TextView txtYape = view.findViewById(R.id.txtPayYape);
@@ -56,23 +53,23 @@ public class PayTypePicker extends DialogFragment {
         Button btnDivide = view.findViewById(R.id.btnDivide);
 
         txtCash.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.EFECTIVO, mesasViewModel));
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.EFECTIVO));
             dismiss();
         });
         txtVisa.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.VISA, mesasViewModel));
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.VISA));
             dismiss();
         });
         txtYape.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.YAPE, mesasViewModel));
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.YAPE));
             dismiss();
         });
         txtCripto.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.CRIPTO, mesasViewModel));
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.CRIPTO));
             dismiss();
         });
         btnDivide.setOnClickListener(v -> {
-            CuentaDivider fragment = new CuentaDivider(currentDate, snapshot, mesasViewModel);
+            CuentaDivider fragment = new CuentaDivider(currentDate, snapshot);
             fragment.show(manager, Utils.TAG);
             dismiss();
         });

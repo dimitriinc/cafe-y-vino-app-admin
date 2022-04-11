@@ -1,6 +1,7 @@
 package com.cafeyvinowinebar.Administrador.Adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cafeyvinowinebar.Administrador.App;
+import com.cafeyvinowinebar.Administrador.Interfaces.OnItemClickListener;
+import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
 import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
@@ -41,10 +44,15 @@ public class AdapterCustomUsuarios extends FirestoreRecyclerAdapter<Mesa, Adapte
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     private final Context context;
+    private final Handler mainHandler;
 
-    public AdapterCustomUsuarios(@NonNull FirestoreRecyclerOptions<Mesa> options, Context context) {
+    private OnItemClickListener listener;
+    private OnItemLongClickListener longListener;
+
+    public AdapterCustomUsuarios(@NonNull FirestoreRecyclerOptions<Mesa> options, Context context, Handler mainHandler) {
         super(options);
         this.context = context;
+        this.mainHandler = mainHandler;
     }
 
     @Override
@@ -70,82 +78,18 @@ public class AdapterCustomUsuarios extends FirestoreRecyclerAdapter<Mesa, Adapte
             txtMesa = itemView.findViewById(R.id.txtUsarioMesa);
             txtNombre = itemView.findViewById(R.id.txtUsarioNombre);
 
-            // on click admin can assign a new name to the table
             itemView.setOnClickListener(v -> {
-
-                // get the snapshot of the clicked document
-                DocumentSnapshot clickedDoc = getSnapshots().getSnapshot(getAbsoluteAdapterPosition());
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                View view = LayoutInflater.from(context).inflate(R.layout.dialog_custom_mesa, null);
-                EditText edtNewMesa = view.findViewById(R.id.edtNewMesa);
-                FloatingActionButton fabOkNewMesa = view.findViewById(R.id.fabOkNewMesa);
-                builder.setView(view);
-                AlertDialog dialog = builder.create();
-
-                fabOkNewMesa.setOnClickListener(v2 -> {
-
-                    String newMesa = edtNewMesa.getText().toString().trim();
-                    if (newMesa.isEmpty()) {
-                        Toast.makeText(context, R.string.llenar_los_campos, Toast.LENGTH_SHORT).show();
-                    } else {
-
-                        // change the mesa value in the pedidos and cuenta in the fStore
-                        App.executor.submit(new MesaInCuentaChanger(
-                                Utils.getCurrentDate(),
-                                getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getString(Utils.KEY_NAME),
-                                newMesa));
-
-                        // check if the new mesa name is already in the mesas collection at the Firestore
-                        fStore.collection("mesas").get()
-                                .addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
-
-                                    boolean isFixed = false;
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                        
-                                        if (Objects.equals(snapshot.getString(Utils.KEY_NAME), newMesa)) {
-
-                                            // the table of the new name is in the collection, most probably one of the fixed ones
-                                            snapshot.getReference().update("present", true);
-                                            isFixed = true;
-
-                                            if (clickedDoc.getBoolean("fixed")) {
-                                                // if the table we are changing is one of the fixed ones, we change its presence status
-                                                clickedDoc.getReference().update("present", false);
-                                            } else {
-                                                // the table we are changing was a customized one, we delete it from the collection
-                                                clickedDoc.getReference().delete();
-                                            }
-                                        }
-                                    }
-
-                                    
-                                    if (!isFixed) {
-
-                                        // we are here because iteratation through the mesas collection didn't find the matching name
-                                        // it means that administrator wants to assign a new customized table
-                                        // so we add a new one to the collection
-                                        fStore.collection("mesas").add(new Mesa(false, false, true, newMesa));
-                                        
-                                        if (clickedDoc.getBoolean("fixed")) {
-                                            
-                                            // the old one is one of the fixed, we change its presence status
-                                            clickedDoc.getReference().update("present", false);
-                                        } else {
-                                            // the old one is customized, we can delete it
-                                            clickedDoc.getReference().delete();
-                                        }
-                                    }
-                                });
-
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
+                int position = getAbsoluteAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onItemClick(getSnapshots().getSnapshot(position), position, v);
+                }
             });
 
             itemView.setOnLongClickListener(v -> {
-                getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getReference().update("present", false);
+                int position = getAbsoluteAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && longListener != null) {
+                    longListener.onItemLongClick(getSnapshots().getSnapshot(position), position, v);
+                }
                 return true;
             });
         }
@@ -154,5 +98,13 @@ public class AdapterCustomUsuarios extends FirestoreRecyclerAdapter<Mesa, Adapte
             txtMesa.setText(mesa.getName());
             txtNombre.setText(R.string.cliente);
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longListener) {
+        this.longListener = longListener;
     }
 }

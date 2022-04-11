@@ -73,15 +73,6 @@ public class AdapterCanasta extends ListAdapter<ProductEntity, AdapterCanasta.Vi
                 viewModel.increment(product.getName(), count);
             });
 
-            itemView.setOnLongClickListener(view -> {
-                // on long click we decrement it
-                // TODO: get rid of this one (?)
-                try {
-                    decrement();
-                } catch (ArrayIndexOutOfBoundsException ignored) {}
-                return true;
-            });
-
             txtCanastaCount.setOnClickListener(view -> {
                 // when clicking on the view that displays the count, we decrement the product
                 // it's more usable then the long click

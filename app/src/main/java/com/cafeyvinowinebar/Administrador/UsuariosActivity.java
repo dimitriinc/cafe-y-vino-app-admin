@@ -2,15 +2,15 @@ package com.cafeyvinowinebar.Administrador;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,21 +19,24 @@ import android.widget.Toast;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterCustomUsuarios;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterUsuarios;
 import com.cafeyvinowinebar.Administrador.Fragments.UserSearcher;
+import com.cafeyvinowinebar.Administrador.Interfaces.OnItemClickListener;
+import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
-import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.POJOs.Usuario;
 import com.cafeyvinowinebar.Administrador.Runnables.MesaInCuentaChanger;
-import com.cafeyvinowinebar.Administrador.Runnables.MesaSetter;
 import com.cafeyvinowinebar.Administrador.Runnables.PresenceChanger;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -63,6 +66,7 @@ public class UsuariosActivity extends AppCompatActivity {
     private MaterialButton btnBuscarUsuarios;
     private EditText edtUserName;
     private UserSearcher fragment;
+    Handler mainHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +165,7 @@ public class UsuariosActivity extends AppCompatActivity {
                     String userId = snapshot.getId();
 
                     // updates the mesa field in the user's doc
-                    App.executor.submit(new MesaSetter(snapshot, mesaFormat));
+                    snapshot.getReference().update(Utils.KEY_MESA, mesaFormat);
 
                     // looks for the customer's orders and bill to updates the mesa field on those docs as well
                     App.executor.submit(new MesaInCuentaChanger(currentDate, userId, mesaFormat));
@@ -201,9 +205,100 @@ public class UsuariosActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Mesa> options = new FirestoreRecyclerOptions.Builder<Mesa>()
                 .setQuery(query, Mesa.class)
                 .build();
-        adapterCustom = new AdapterCustomUsuarios(options, this);
+        adapterCustom = new AdapterCustomUsuarios(options, this, mainHandler);
         recCustomUsuarios.setLayoutManager(new LinearLayoutManager(this));
         recCustomUsuarios.setAdapter(adapterCustom);
+
+        adapterCustom.setOnItemLongClickListener((snapshot, position, v) -> snapshot.getReference().update("present", false));
+
+//        adapterCustom.setOnItemClickListener((clickedDoc, position, view) -> {
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(UsuariosActivity.this);
+//            View viewDialog = LayoutInflater.from(UsuariosActivity.this).inflate(R.layout.dialog_custom_mesa, null);
+//            EditText edtNewMesa = viewDialog.findViewById(R.id.edtNewMesa);
+//            FloatingActionButton fabOkNewMesa = viewDialog.findViewById(R.id.fabOkNewMesa);
+//            builder.setView(viewDialog);
+//            AlertDialog dialog = builder.create();
+//
+//            fabOkNewMesa.setOnClickListener(v2 -> {
+//
+//                String newMesa = edtNewMesa.getText().toString().trim();
+//                if (newMesa.isEmpty()) {
+//                    Toast.makeText(UsuariosActivity.this, R.string.llenar_los_campos, Toast.LENGTH_SHORT).show();
+//                } else {
+//
+//                    // check if the new mesa name is already in the mesas collection at the Firestore
+//                    fStore.collection("mesas").get()
+//                            .addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
+//
+//                                boolean isFixed = false;
+//                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+//
+//                                    if (Objects.equals(snapshot.getString(Utils.KEY_NAME), newMesa)) {
+//
+//                                        // here we need to check if the new table already has some pedidos or cuenta
+//                                        // in this case it is present, and can't be chosen
+//                                        if (snapshot.getBoolean("present")) {
+//                                            mainHandler.post(() -> Toast.makeText(UsuariosActivity.this, "La mesa está ocupada", Toast.LENGTH_SHORT).show());
+//                                            return;
+//                                        }
+//
+//                                        // also check if the new table is blocked, which will mean that it's occupied already
+//                                        if (snapshot.getBoolean("blocked")) {
+//                                            mainHandler.post(() -> Toast.makeText(UsuariosActivity.this, "La mesa está ocupada", Toast.LENGTH_SHORT).show());
+//                                            return;
+//                                        }
+//
+//                                        // the table of the new name is in the collection, a fixed one, and free to use
+//                                        snapshot.getReference().update("present", true);
+//                                        isFixed = true;
+//
+//                                        // change the mesa value in the pedidos and cuenta in the fStore
+//                                        App.executor.submit(new MesaInCuentaChanger(
+//                                                Utils.getCurrentDate(),
+//                                                clickedDoc.getString(Utils.KEY_NAME),
+//                                                newMesa));
+//
+//                                        if (clickedDoc.getBoolean("fixed")) {
+//                                            // if the table we are changing is one of the fixed ones, we change its presence status
+//                                            clickedDoc.getReference().update("present", false);
+//                                        } else {
+//                                            // the table we are changing was a customized one, we delete it from the collection
+//                                            clickedDoc.getReference().delete();
+//                                        }
+//                                    }
+//                                }
+//
+//
+//                                if (!isFixed) {
+//
+//                                    // we are here because the iteration through the mesas collection didn't find a matching name
+//                                    // it means that administrator wants to assign a new customized table
+//                                    // so we add a new one to the collection
+//                                    fStore.collection("mesas").add(new Mesa(false, false, true, newMesa));
+//
+//                                    // change the mesa value in the pedidos and cuenta in the fStore
+//                                    App.executor.submit(new MesaInCuentaChanger(
+//                                            Utils.getCurrentDate(),
+//                                            clickedDoc.getString(Utils.KEY_NAME),
+//                                            newMesa));
+//
+//                                    if (clickedDoc.getBoolean("fixed")) {
+//
+//                                        // the old one is one of the fixed, we change its presence status
+//                                        clickedDoc.getReference().update("present", false);
+//                                    } else {
+//                                        // the old one is customized, we can delete it
+//                                        clickedDoc.getReference().delete();
+//                                    }
+//                                }
+//                            });
+//
+//                    dialog.dismiss();
+//                }
+//            });
+//            dialog.show();
+//        });
 
     }
 
@@ -216,6 +311,7 @@ public class UsuariosActivity extends AppCompatActivity {
         imgSlidingUsuarios = findViewById(R.id.imgSlidingUsuarios);
         btnBuscarUsuarios = findViewById(R.id.btnBuscarUsuarios);
         edtUserName = findViewById(R.id.edtUserName);
+        mainHandler = new Handler();
 
     }
 

@@ -84,7 +84,7 @@ public class AdapterMesas extends FirestoreRecyclerAdapter<Mesa, AdapterMesas.Vi
 
             itemView.setOnLongClickListener(view -> {
 
-                // deletes a table
+                // deletes the table
                 // but we don't delete the fixed tables (01 - 12)
                 // a side note: users' tables that are outside of the set of the fixed ones won't be displayed in the recycler view
                 // so there is no way for admins to accidentally delete it
@@ -117,6 +117,11 @@ public class AdapterMesas extends FirestoreRecyclerAdapter<Mesa, AdapterMesas.Vi
                     .whereEqualTo(Utils.KEY_MESA, mesaName);
 
 
+            // mark the table with color if it's blocked
+            if (mesa.isBlocked()) {
+                parent.setBackgroundColor(context.getColor(R.color.regal_light));
+            }
+
             // first we check the cuentas
             queryCuentas.get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
 
@@ -129,12 +134,12 @@ public class AdapterMesas extends FirestoreRecyclerAdapter<Mesa, AdapterMesas.Vi
                     parent.setBackgroundColor(context.getColor(R.color.llegado_light));
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
 
-                        // the cuenta meta doc of a custom table will have the id that corresponds to the name of the table
-                        // the cuenta meta doc id of a table belonging to a user is this user's Uid
-                        if (!document.getId().equals(mesa.getName())) {
+                        // the name field of a custom cuenta meta doc will always be 'Cliente'
+                        // that's how we distinguish custom cuentas from the cuentas of the users of the client app
+                        if (!Objects.equals(document.getString(Utils.KEY_NAME), "Cliente")) {
 
                             // the table belongs to a user, we set the pinkish color and block that table
-                            // admin cannot create custom orders for a user of the app
+                            // admin cannot create custom orders for a user of the client app
                             parent.setBackgroundColor(context.getColor(R.color.regal_light));
                             getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getReference().update("blocked", true);
                         }
@@ -153,10 +158,10 @@ public class AdapterMesas extends FirestoreRecyclerAdapter<Mesa, AdapterMesas.Vi
                             parent.setBackgroundColor(context.getColor(R.color.llegado_light));
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots1) {
 
-                                // a custom order meta doc will have a field userId that will be the same as the name of the table
-                                if (!Objects.equals(snapshot.getString(Utils.KEY_USER_ID), mesa.getName())) {
+                                // a custom order meta doc will have a field 'user' set to 'Cliente'
+                                if (!Objects.equals(snapshot.getString(Utils.KEY_USER), "Cliente")) {
 
-                                    // the order belongs to a user, we block it
+                                    // the order belongs to a user of the client app, we block the table
                                     parent.setBackgroundColor(context.getColor(R.color.regal_light));
                                     getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getReference().update("blocked", true);
                                 }

@@ -49,6 +49,7 @@ public class CuentaMetaDocSetter implements Runnable {
                 cuentaData.put(Utils.KEY_NAME, userName);
                 cuentaData.put(Utils.KEY_MESA, userMesa);
                 cuentaData.put(Utils.KEY_IS_EXPANDED, false);
+                cuentaData.put(Utils.KEY_USER_ID, userId);
                 metaDoc.set(cuentaData);
             }
         });

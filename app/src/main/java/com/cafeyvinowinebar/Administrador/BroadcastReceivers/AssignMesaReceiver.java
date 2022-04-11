@@ -3,7 +3,9 @@ package com.cafeyvinowinebar.Administrador.BroadcastReceivers;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
+
 import androidx.core.app.RemoteInput;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +18,17 @@ import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Runnables.DoorOpener;
 import com.cafeyvinowinebar.Administrador.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class AssignMesaReceiver extends BroadcastReceiver {
 
     private final FirebaseMessaging fMessaging = FirebaseMessaging.getInstance();
+    private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     @SuppressLint({"DefaultLocale", "UnspecifiedImmutableFlag"})
     @Override
@@ -68,7 +75,15 @@ public class AssignMesaReceiver extends BroadcastReceiver {
                 NotificationManagerCompat manager = NotificationManagerCompat.from(context);
                 manager.notify(notiId, replyNotification);
 
-            } catch (Exception e){
+                // block the table in the mesas collection
+                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, mesaFormat).get()
+                        .addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                doc.getReference().update("blocked", true);
+                            }
+                        });
+
+            } catch (Exception e) {
 
                 // admin entered a non-numerical value to the remote input
                 // so we rebuild the same noti

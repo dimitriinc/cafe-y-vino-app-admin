@@ -3,6 +3,7 @@ package com.cafeyvinowinebar.Administrador.Runnables;
 import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -10,12 +11,14 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Objects;
+
 /**
  * If the customer has unserved orders or an open bill
  * We change the table value on those documents
  */
-public class MesaInCuentaChanger implements  Runnable {
-    
+public class MesaInCuentaChanger implements Runnable {
+
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private final String currentDate, userId, newMesa;
 
@@ -40,17 +43,31 @@ public class MesaInCuentaChanger implements  Runnable {
         pedidosDelUser.get()
                 .addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
 
-            // we check if the user has orders
-            if (!queryDocumentSnapshots.isEmpty()) {
+                    // we check if the user has orders
+                    if (!queryDocumentSnapshots.isEmpty()) {
 
-                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                    if (!snapshot.getBoolean(Utils.SERVIDO))
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
-                    // for each open order we change the table value
-                    snapshot.getReference().update(Utils.KEY_MESA, newMesa);
-                }
-            }
-        });
+                            // for each open order we change the table value
+                            snapshot.getReference().update(Utils.KEY_MESA, newMesa);
+
+                            // if the pedido is a custom one, we also need to change the userId field
+                            // since this field must have the value of the mesa's name in case of custom pedidos
+                            if (Objects.equals(snapshot.getString(Utils.KEY_NAME), "Cliente")) {
+                                snapshot.getReference().update(Utils.KEY_USER_ID, newMesa);
+                            } else {
+
+                                // while changing the client table, we also want to unblock the the table being changed
+                                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
+                                        .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
+                                        doc.getReference().update("blocked", false);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
 
         cuentaReference.get().addOnSuccessListener(App.executor, snapshot -> {
 
@@ -58,6 +75,50 @@ public class MesaInCuentaChanger implements  Runnable {
 
                 // if the customer already has an open bill, we update the table there as well
                 snapshot.getReference().update(Utils.KEY_MESA, newMesa);
+
+                // if the cuenta is from a client, we unblock the table being changed
+                if (!Objects.equals(snapshot.getString(Utils.KEY_NAME), "Cliente")) {
+
+                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
+                            .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
+                            doc.getReference().update("blocked", false);
+                        }
+                    });
+                } else {
+                    // if the cuenta belongs to a customized table, we update its userId field
+                    // we copy the meta document and its collection of products
+                    // and delete the old one (we need the cuenta stored under its new id
+                    DocumentReference newCuentaMetaDoc = fStore.collection(Utils.CUENTAS)
+                            .document(Utils.getCurrentDate())
+                            .collection("cuentas corrientes")
+                            .document(newMesa);
+
+                    newCuentaMetaDoc.set(Objects.requireNonNull(snapshot.getData()))
+                            .addOnSuccessListener(App.executor, unused ->
+                                    fStore.collection(snapshot.getReference().getPath() + "/cuenta")
+                                            .get()
+                                            .addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
+
+                                                CollectionReference newCuentaCollection =
+                                                        fStore.collection(newCuentaMetaDoc.getPath() + "/cuenta");
+
+                                                for (QueryDocumentSnapshot oldProduct : queryDocumentSnapshots) {
+
+                                                    fStore.collection(newCuentaCollection.getPath())
+                                                            .document(oldProduct.getId())
+                                                            .set(oldProduct.getData());
+                                                }
+
+                                                snapshot.getReference().delete();
+
+                                                // update the mesa and userId fields on the new MetaDoc
+                                                newCuentaMetaDoc.update(Utils.KEY_MESA, newMesa);
+                                                newCuentaMetaDoc.update(Utils.KEY_USER_ID, newMesa);
+                                            }));
+
+                }
             }
         });
     }
