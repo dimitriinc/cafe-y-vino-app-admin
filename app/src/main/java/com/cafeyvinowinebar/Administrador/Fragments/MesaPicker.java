@@ -1,8 +1,6 @@
 package com.cafeyvinowinebar.Administrador.Fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,22 +11,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterMesas;
 import com.cafeyvinowinebar.Administrador.App;
-import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.NewPedidoActivity;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
-import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 

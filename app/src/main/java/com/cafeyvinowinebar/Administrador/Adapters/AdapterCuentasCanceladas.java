@@ -70,7 +70,10 @@ public class AdapterCuentasCanceladas extends FirestoreRecyclerAdapter<CuentaCan
         public void bind(CuentaCancelada model) {
 
             txtSum.setText(model.getTotal());
-            txtCuentaId.setText(model.getName());
+
+            // we want only the first name of the user on display
+            String[] userNames = model.getName().split(" ");
+            txtCuentaId.setText(userNames[0]);
 
             imgExp.setOnClickListener(v -> {
                 model.setExpanded(!model.isExpanded());

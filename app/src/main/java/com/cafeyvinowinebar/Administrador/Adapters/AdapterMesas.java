@@ -9,15 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cafeyvinowinebar.Administrador.App;
-import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.NewPedidoActivity;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
-import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;

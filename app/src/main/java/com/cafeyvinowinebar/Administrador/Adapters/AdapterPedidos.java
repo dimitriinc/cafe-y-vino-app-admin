@@ -117,7 +117,9 @@ public class AdapterPedidos extends FirestoreRecyclerAdapter<Pedido, AdapterPedi
         public void bind(Pedido model, int position) {
             Query query;
 
-            txtPedidoId.setText(context.getString(R.string.pedido_title, model.getUser(), model.getMesa()));
+            // we want only the first name of the user on display
+            String[] userNames = model.getUser().split(" ");
+            txtPedidoId.setText(context.getString(R.string.pedido_title, userNames[0], model.getMesa()));
 
             imgOne.setOnClickListener(v -> {
                 model.setExpanded(!model.isExpanded());

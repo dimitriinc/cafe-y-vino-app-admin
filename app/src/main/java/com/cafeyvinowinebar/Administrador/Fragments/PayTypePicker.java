@@ -11,16 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.cafeyvinowinebar.Administrador.App;
-import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.R;
 import com.cafeyvinowinebar.Administrador.Runnables.CuentaCancelador;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.google.firebase.firestore.DocumentSnapshot;
-
-import java.util.Objects;
 
 /**
  * A dialog fragment where admin chooses the payment type

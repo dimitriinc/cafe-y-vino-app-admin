@@ -5,36 +5,18 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemClickListener;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
-import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
-import com.cafeyvinowinebar.Administrador.POJOs.MesaEntity;
 import com.cafeyvinowinebar.Administrador.R;
-import com.cafeyvinowinebar.Administrador.Runnables.MesaInCuentaChanger;
-import com.cafeyvinowinebar.Administrador.Utils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Displays the list of custom created tables in the 'present' state, i.e. there are pedidos or cuentas assigned to them

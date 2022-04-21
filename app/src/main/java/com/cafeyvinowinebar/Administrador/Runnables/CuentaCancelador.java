@@ -1,7 +1,6 @@
 package com.cafeyvinowinebar.Administrador.Runnables;
 
 import com.cafeyvinowinebar.Administrador.App;
-import com.cafeyvinowinebar.Administrador.MesasViewModel;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -11,14 +10,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Takes all the items in the pending bill collection and moves them to a cuenta cancelada collection
@@ -122,11 +122,17 @@ public class CuentaCancelador implements Runnable {
                                     // we also should update the 'blocked' status of the table if it's one of the fixed ones
                                     // if the table assigned to the client was not one of the fixed, the mesaId will be null
                                     // and we shouldn't worry about this step
-                                    if (mesaId != null) {
-                                        fStore.collection("mesas")
-                                                .document(mesaId)
-                                                .update("blocked", false);
-                                    }
+                                    fStore.collection("mesas").get()
+                                            .addOnSuccessListener(App.executor, new OnSuccessListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                                        if (Objects.equals(doc.getString(Utils.KEY_NAME), userMesa)) {
+                                                            doc.getReference().update("blocked", false);
+                                                        }
+                                                    }
+                                                }
+                                            });
 
                                     // get some personal data about the user
                                     String token = userDocumentSnapshot.getString(Utils.KEY_TOKEN);

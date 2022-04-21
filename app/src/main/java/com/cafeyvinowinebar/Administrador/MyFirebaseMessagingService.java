@@ -278,8 +278,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int notiId = new Random().nextInt();
 
         String token = message.getData().get(Utils.KEY_TOKEN);
-        String nombre = message.getData().get(Utils.KEY_NOMBRE);
-        String mesa = message.getData().get(Utils.KEY_MESA);
+
+        // we want only the first name of the user on display
+        String[] userNames = Objects.requireNonNull(message.getData().get(Utils.KEY_NOMBRE)).split(" ");
+                String mesa = message.getData().get(Utils.KEY_MESA);
         String fecha = message.getData().get(Utils.KEY_FECHA);
         String metaDocId = message.getData().get(Utils.KEY_META_ID);
 
@@ -296,7 +298,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         // check the content of the order
-        Intent verIntent = PedidoDisplayerActivity.newIntent(this, metaDocId, fecha, token, notiId, nombre, mesa);
+        Intent verIntent = PedidoDisplayerActivity.newIntent(this, metaDocId, fecha, token, notiId, userNames[0], mesa);
         PendingIntent verPendingIntent = PendingIntent.getActivity(this, 11, verIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -304,7 +306,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setContentTitle(getString(R.string.nuevo_pedido, mesa))
                 .setAutoCancel(true)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(getString(R.string.pedido_message, nombre, mesa)))
+                        .bigText(getString(R.string.pedido_message, userNames[0], mesa)))
                 .setSmallIcon(R.drawable.img_mini_logo)
                 .setColor(getColor(R.color.notification))
                 .setContentIntent(tapPendingIntent)

@@ -66,7 +66,10 @@ public class AdapterUsuarios extends FirestoreRecyclerAdapter<Usuario, AdapterUs
         }
 
         public void bind(Usuario usuario) {
-            txtNombre.setText(usuario.getNombre());
+
+            // we want only the first name of the user on display
+            String[] userNames = usuario.getNombre().split(" ");
+            txtNombre.setText(userNames[0]);
             txtMesa.setText(usuario.getMesa());
         }
     }

@@ -1,8 +1,7 @@
 package com.cafeyvinowinebar.Administrador.Fragments;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,7 +120,6 @@ public class UserSearcher extends DialogFragment {
                                 .addData(Utils.ACTION_MSG, msg)
                                 .build());
                         dialog.dismiss();
-                        dismiss();
                     }
                 });
                 builderMensaje.create().show();
@@ -137,12 +135,6 @@ public class UserSearcher extends DialogFragment {
     public void onStart() {
         super.onStart();
         adapter.startListening();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        dismiss();
     }
 
     @Override

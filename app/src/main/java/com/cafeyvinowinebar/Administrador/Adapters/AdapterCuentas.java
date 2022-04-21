@@ -129,7 +129,9 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
             // the id of a cuenta meta doc is the Uid of the user to whom this bill belongs
             String userId = getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getId();
 
-            txtCuentaId.setText(context.getString(R.string.pedido_title, model.getName(), model.getMesa()));
+            // we want only the first name of the user on display
+            String[] userNames = model.getName().split(" ");
+            txtCuentaId.setText(context.getString(R.string.pedido_title, userNames[0], model.getMesa()));
 
             // expand the list item
             imgExp.setOnClickListener(v -> {
