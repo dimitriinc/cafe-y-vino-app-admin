@@ -123,13 +123,10 @@ public class CuentaCancelador implements Runnable {
                                     // if the table assigned to the client was not one of the fixed, the mesaId will be null
                                     // and we shouldn't worry about this step
                                     fStore.collection("mesas").get()
-                                            .addOnSuccessListener(App.executor, new OnSuccessListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                                        if (Objects.equals(doc.getString(Utils.KEY_NAME), userMesa)) {
-                                                            doc.getReference().update("blocked", false);
-                                                        }
+                                            .addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+                                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
+                                                    if (Objects.equals(doc.getString(Utils.KEY_NAME), userMesa)) {
+                                                        doc.getReference().update("blocked", false);
                                                     }
                                                 }
                                             });
@@ -227,20 +224,6 @@ public class CuentaCancelador implements Runnable {
                         }
                     });
 
-                } else {
-                    // the cuenta belongs to a custom user
-                    // in this case we should delete the document from Firestore, if it's not one of the fixed tables
-                    // if it's fixed, we update its presence status
-
-                    fStore.collection("mesas").document(mesaId).get()
-                            .addOnSuccessListener(App.executor, documentSnapshot -> {
-
-                                if (!documentSnapshot.getBoolean("fixed")) {
-                                    documentSnapshot.getReference().delete();
-                                } else {
-                                    documentSnapshot.getReference().update("present", false);
-                                }
-                            });
                 }
 
                 // copy the item to the cuenta cancelada collection, and then delete it
@@ -256,12 +239,14 @@ public class CuentaCancelador implements Runnable {
             Map<String, Object> data = new HashMap<>();
             data.put(Utils.KEY_NAME, userName);
             data.put(Utils.KEY_IS_EXPANDED, false);
-            data.put(Utils.KEY_FECHA, currentDate);
+            data.put(Utils.KEY_HORA, Utils.getCurrentHour());
             data.put(Utils.TOTAL, String.valueOf(total));
+            data.put(Utils.KEY_MESA, userMesa);
             data.put(Utils.KEY_USER_ID, userId);
+            data.put(Utils.KEY_FECHA, currentDate);
+            data.put(Utils.KEY_META_ID, metaDocId);
             data.put(Utils.TIMESTAMP, new Timestamp(new Date()));
             data.put(Utils.KEY_PAY_TYPE, payType);
-            data.put(Utils.KEY_META_ID, metaDocId);
 
             // if the bill was divided between different payment types
             // we also add the data of how exactly it was devided, and what were the payment types
@@ -283,6 +268,24 @@ public class CuentaCancelador implements Runnable {
 
             // set the prepared object as a meta doc of the canceled bill
             toDoc.set(data);
+
+            // finally, we handle custom tables
+            // if the table in question is a fixed one, we update its presence status to false
+            // if it's not a fixed one, we delete it
+            if (userName.equals("Cliente")) {
+
+                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, userMesa).get()
+                        .addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots1) {
+                                if (snapshot.getBoolean("fixed")) {
+                                    snapshot.getReference().update("present", false);
+                                } else {
+                                    snapshot.getReference().delete();
+                                }
+                            }
+                        });
+            }
         });
     }
 }

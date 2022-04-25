@@ -205,14 +205,17 @@ public class NewPedidoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        
+
+        boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+
         // if the back button was pressed by mistake, we want to warn admin that the products in the canasta will be lost
         // though there is no point in warning if the canasta is empty, so we first check it
         if (!Objects.requireNonNull(productsViewModel.getProducts().getValue()).isEmpty()) {
 
             // the canasta isn't empty, we show admin an alert dialog
-            new AlertDialog.Builder(this)
-                    .setTitle("Quieres salir?")
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Quieres salir?")
                     .setMessage("La canasta se vaciará")
                     .setPositiveButton("SI", (DialogInterface dialogInterface, int i) -> {
 
@@ -220,8 +223,17 @@ public class NewPedidoActivity extends AppCompatActivity {
                         finish();
                         dialogInterface.dismiss();
                     })
-                    .setNegativeButton("NO", (DialogInterface dialogInterface, int i) -> dialogInterface.dismiss())
-                    .show();
+                    .setNegativeButton("NO", (DialogInterface dialogInterface, int i) -> dialogInterface.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            if (isDarkThemeOn) {
+                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                btnPositive.setTextColor(getColor(R.color.white));
+                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                btnNegative.setTextColor(getColor(R.color.white));
+            }
+
         } else {
             super.onBackPressed();
         }

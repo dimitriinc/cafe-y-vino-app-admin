@@ -1,14 +1,13 @@
 package com.cafeyvinowinebar.Administrador.POJOs;
 
 public class Pedido {
-    String user, mesa, userId, count;
+    String user, mesa, userId;
     public boolean servido, servidoCocina, servidoBarra, isExpanded;
 
-    public Pedido(String user, String mesa, String userId, String count, boolean servido, boolean servidoCocina, boolean servidoBarra, boolean isExpanded) {
+    public Pedido(String user, String mesa, String userId, boolean servido, boolean servidoCocina, boolean servidoBarra, boolean isExpanded) {
         this.user = user;
         this.mesa = mesa;
         this.userId = userId;
-        this.count = count;
         this.servido = servido;
         this.servidoCocina = servidoCocina;
         this.servidoBarra = servidoBarra;
@@ -56,14 +55,6 @@ public class Pedido {
 
     public void setExpanded(boolean expanded) {
         isExpanded = expanded;
-    }
-
-    public String getCount() {
-        return count;
-    }
-
-    public void setCount(String count) {
-        this.count = count;
     }
 
     public boolean isServidoCocina() {

@@ -1,11 +1,14 @@
 package com.cafeyvinowinebar.Administrador.Runnables;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +53,9 @@ public class ReservasOnClickManager implements Runnable {
     @Override
     public void run() {
 
+        boolean isDarkThemeOn = (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+
         // first we store the table number
         String mesa = snapshot.getId();
 
@@ -91,11 +97,10 @@ public class ReservasOnClickManager implements Runnable {
                                 View view = activity.getLayoutInflater().inflate(R.layout.dialog_reserva_displayer, null);
                                 builder.setView(view);
                                 builder.setTitle("Solicitud");
-                                builder.setCancelable(true);
                                 TextView txtNombre = view.findViewById(R.id.txtNombre);
                                 TextView txtHora = view.findViewById(R.id.txtHora);
                                 TextView txtPax = view.findViewById(R.id.txtPax);
-                                TextView txtTelefono = view.findViewById(R.id.txtMesa);
+                                TextView txtTelefono = view.findViewById(R.id.txtTelefono);
                                 TextView txtComentario = view.findViewById(R.id.txtComentario);
                                 txtNombre.setText(nombre);
                                 txtHora.setText(hora);
@@ -159,7 +164,20 @@ public class ReservasOnClickManager implements Runnable {
                                     mainHandler.post(() -> builder1.create().show());
                                 });
 
-                                mainHandler.post(() -> builder.create().show());
+
+
+                                mainHandler.post(() -> {
+
+                                    AlertDialog dialogRequest = builder.create();
+                                    dialogRequest.show();
+
+                                    if (isDarkThemeOn) {
+                                        Button btnPositive = dialogRequest.getButton(DialogInterface.BUTTON_POSITIVE);
+                                        btnPositive.setTextColor(context.getColor(R.color.white));
+                                        Button btnNegative = dialogRequest.getButton(DialogInterface.BUTTON_NEGATIVE);
+                                        btnNegative.setTextColor(context.getColor(R.color.white));
+                                    }
+                                });
                             });
                 } else {
 
@@ -215,11 +233,10 @@ public class ReservasOnClickManager implements Runnable {
                         }
                     });
 
-                    builder.setCancelable(true);
                     TextView txtNombre = view.findViewById(R.id.txtNombre);
                     TextView txtHora = view.findViewById(R.id.txtHora);
                     TextView txtPax = view.findViewById(R.id.txtPax);
-                    TextView txtTelefono = view.findViewById(R.id.txtMesa);
+                    TextView txtTelefono = view.findViewById(R.id.txtTelefono);
                     TextView txtComentario = view.findViewById(R.id.txtComentario);
                     txtNombre.setText(nombre);
                     txtHora.setText(hora);
@@ -227,7 +244,18 @@ public class ReservasOnClickManager implements Runnable {
                     txtTelefono.setText(telefono);
                     txtComentario.setText(comentario);
 
-                    mainHandler.post(() -> builder.create().show());
+                    mainHandler.post(() -> {
+
+                        AlertDialog dialogConfirm = builder.create();
+                        dialogConfirm.show();
+
+                        if (isDarkThemeOn) {
+                            Button btnPositive = dialogConfirm.getButton(DialogInterface.BUTTON_POSITIVE);
+                            btnPositive.setTextColor(context.getColor(R.color.white));
+                            Button btnNegative = dialogConfirm.getButton(DialogInterface.BUTTON_NEGATIVE);
+                            btnNegative.setTextColor(context.getColor(R.color.white));
+                        }
+                    });
                 }
             } else {
 
@@ -242,7 +270,6 @@ public class ReservasOnClickManager implements Runnable {
                 EditText etTelefono = view.findViewById(R.id.etTelefono);
                 EditText etComentario = view.findViewById(R.id.etComentario);
                 builder.setTitle("Agregar una reserva");
-                builder.setCancelable(true);
                 builder.setPositiveButton("OK", (dialog, which) -> {
 
                     // a reservation is created with custom data
@@ -256,7 +283,18 @@ public class ReservasOnClickManager implements Runnable {
                             .addOnSuccessListener(unused -> adapter.notifyItemChanged(position));
                 });
 
-                mainHandler.post(() -> builder.create().show());
+                mainHandler.post(() -> {
+
+                    AlertDialog dialogEmpty = builder.create();
+                    dialogEmpty.show();
+
+                    if (isDarkThemeOn) {
+                        Button btnPositive = dialogEmpty.getButton(DialogInterface.BUTTON_POSITIVE);
+                        btnPositive.setTextColor(context.getColor(R.color.white));
+                        Button btnNegative = dialogEmpty.getButton(DialogInterface.BUTTON_NEGATIVE);
+                        btnNegative.setTextColor(context.getColor(R.color.white));
+                    }
+                });
             }
         });
     }

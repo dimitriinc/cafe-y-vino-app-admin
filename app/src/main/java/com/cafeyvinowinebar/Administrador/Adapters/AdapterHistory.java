@@ -50,8 +50,9 @@ public class AdapterHistory extends ListAdapter<CuentaCancelada, AdapterHistory.
             return oldItem.isExpanded() == newItem.isExpanded() &&
                     oldItem.getMetaDocId().equals(newItem.getMetaDocId()) &&
                     oldItem.getName().equals(newItem.getName()) &&
-                    oldItem.getFecha().equals(newItem.getFecha()) &&
+                    oldItem.getHora().equals(newItem.getHora()) &&
                     oldItem.getTotal().equals(newItem.getTotal()) &&
+                    oldItem.getMesa().equals(newItem.getMesa()) &&
                     oldItem.getUserId().equals(newItem.getUserId());
         }
     };

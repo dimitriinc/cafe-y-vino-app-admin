@@ -53,17 +53,31 @@ public class MesaInCuentaChanger implements Runnable {
 
                             // if the pedido is a custom one, we also need to change the userId field
                             // since this field must have the value of the mesa's name in case of custom pedidos
-                            if (Objects.equals(snapshot.getString(Utils.KEY_NAME), "Cliente")) {
+                            if (Objects.equals(snapshot.getString(Utils.KEY_USER), "Cliente")) {
                                 snapshot.getReference().update(Utils.KEY_USER_ID, newMesa);
                             } else {
 
-                                // while changing the client table, we also want to unblock the the table being changed
+                                // while changing the client table, we also want to unblock the table being changed
+                                // and block the new one
                                 fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
                                         .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+
                                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
                                         doc.getReference().update("blocked", false);
                                     }
                                 });
+
+                                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, newMesa)
+                                        .get().addOnSuccessListener(App.executor, queryDocuments -> {
+
+                                    for (QueryDocumentSnapshot snap : queryDocuments) {
+                                        if (!snap.getBoolean("blocked")) {
+                                            snap.getReference().update("blocked", true);
+                                        }
+                                    }
+                                });
+
+
                             }
                         }
                     }
@@ -76,7 +90,7 @@ public class MesaInCuentaChanger implements Runnable {
                 // if the customer already has an open bill, we update the table there as well
                 snapshot.getReference().update(Utils.KEY_MESA, newMesa);
 
-                // if the cuenta is from a client, we unblock the table being changed
+                // if the cuenta is from a client, we unblock the table being changed, and block the new one
                 if (!Objects.equals(snapshot.getString(Utils.KEY_NAME), "Cliente")) {
 
                     fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
@@ -84,6 +98,16 @@ public class MesaInCuentaChanger implements Runnable {
 
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
                             doc.getReference().update("blocked", false);
+                        }
+                    });
+
+                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, newMesa)
+                            .get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
+
+                        for (QueryDocumentSnapshot snap : queryDocumentSnapshots) {
+                            if (!snap.getBoolean("blocked")) {
+                                snap.getReference().update("blocked", true);
+                            }
                         }
                     });
                 } else {

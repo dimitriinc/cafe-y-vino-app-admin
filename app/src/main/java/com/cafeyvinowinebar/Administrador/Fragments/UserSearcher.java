@@ -2,6 +2,8 @@ package com.cafeyvinowinebar.Administrador.Fragments;
 
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,6 +98,9 @@ public class UserSearcher extends DialogFragment {
             });
             btnMensaje.setOnClickListener(v -> {
 
+                boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                        == Configuration.UI_MODE_NIGHT_YES;
+
                 // display a nested alert dialog with a field to enter the message
                 AlertDialog.Builder builderMensaje = new AlertDialog.Builder(context);
                 View viewMensaje = getLayoutInflater().inflate(R.layout.dialog_reserva_rejection, null);
@@ -122,7 +127,16 @@ public class UserSearcher extends DialogFragment {
                         dialog.dismiss();
                     }
                 });
-                builderMensaje.create().show();
+
+                AlertDialog dialog = builderMensaje.create();
+                dialog.show();
+
+                if (isDarkThemeOn) {
+                    Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    btnPositive.setTextColor(getActivity().getColor(R.color.white));
+                    Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                    btnNegative.setTextColor(getActivity().getColor(R.color.white));
+                }
             });
             alertDialog.show();
 

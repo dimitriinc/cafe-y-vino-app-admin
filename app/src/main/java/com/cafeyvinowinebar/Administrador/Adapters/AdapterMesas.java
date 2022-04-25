@@ -134,10 +134,9 @@ public class AdapterMesas extends FirestoreRecyclerAdapter<Mesa, AdapterMesas.Vi
                         // that's how we distinguish custom cuentas from the cuentas of the users of the client app
                         if (!Objects.equals(document.getString(Utils.KEY_NAME), "Cliente")) {
 
-                            // the table belongs to a user, we set the pinkish color and block that table
-                            // admin cannot create custom orders for a user of the client app
+                            // the table belongs to a user, we set the pinkish color
+                            // admin cannot create custom orders for a user of the client app, the mesa is blocked when you assign it to client (AssignMesaReceiver)
                             parent.setBackgroundColor(context.getColor(R.color.regal_light));
-                            getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getReference().update("blocked", true);
                         }
                     }
 
@@ -157,9 +156,8 @@ public class AdapterMesas extends FirestoreRecyclerAdapter<Mesa, AdapterMesas.Vi
                                 // a custom order meta doc will have a field 'user' set to 'Cliente'
                                 if (!Objects.equals(snapshot.getString(Utils.KEY_USER), "Cliente")) {
 
-                                    // the order belongs to a user of the client app, we block the table
+                                    // the order belongs to a user of the client app, we paint it pinkish
                                     parent.setBackgroundColor(context.getColor(R.color.regal_light));
-                                    getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getReference().update("blocked", true);
                                 }
                             }
                         }

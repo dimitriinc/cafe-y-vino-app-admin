@@ -73,7 +73,15 @@ public class AdapterCuentasCanceladas extends FirestoreRecyclerAdapter<CuentaCan
 
             // we want only the first name of the user on display
             String[] userNames = model.getName().split(" ");
-            txtCuentaId.setText(userNames[0]);
+
+            // cuentas canceladas of old format will not have an 'hora' field
+            // for them, the cuenta id on display will be only name
+            if (model.getHora() == null) {
+                txtCuentaId.setText(userNames[0]);
+            } else {
+                txtCuentaId.setText(context.getString(R.string.cuenta_canc_id, userNames[0], model.getMesa(), model.getHora()));
+            }
+
 
             imgExp.setOnClickListener(v -> {
                 model.setExpanded(!model.isExpanded());

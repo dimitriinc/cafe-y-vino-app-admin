@@ -42,6 +42,7 @@
     <string name="entrada_a_medida">La reserva fue creada a medida</string>
     <string name="mesa_blocked">La mesa pertenece a un usuario de la app</string>
     <string name="gift_item">%1$s\n%2$s - Mesa %3$s</string>
+    <string name="cuenta_canc_id">%1$s - Mesa %2$s - %3$s</string>
 
     // for notifications
     <string name="puerta_title">Solicitud de entrada</string>
@@ -105,6 +106,7 @@
     <string name="regalos">Regalos</string>
     <string name="bebidas_calientes">Bebidas Calientes</string>
     <string name="ofertas">Ofertas</string>
+
 
 
 </resources>

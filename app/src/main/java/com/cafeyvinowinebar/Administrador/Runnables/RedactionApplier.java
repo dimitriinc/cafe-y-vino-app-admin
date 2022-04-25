@@ -42,18 +42,6 @@ public class RedactionApplier implements Runnable {
     @Override
     public void run() {
 
-        // first lets get the current time
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(new Date());
-        String amPm;
-        if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
-            amPm = "AM";
-        } else {
-            amPm = "PM";
-        }
-        String time = calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + amPm;
-
-
         // we prepare a map, were we will store all the changes
         // the map connects the name of the product with the numerical value of the change in its count
         Map<String, String> changes = new HashMap<>();
@@ -124,7 +112,7 @@ public class RedactionApplier implements Runnable {
         // we can store the redaction object, empty the SQLite table, and leave the fragment
         if (!changes.isEmpty()) {
             fStore.collection("cambios").document(Utils.getCurrentDate()).collection("cambios")
-                    .add(new Redaction(changes, comment, userName, mesa, new Timestamp(new Date()), time, Utils.EDICION));
+                    .add(new Redaction(changes, comment, userName, mesa, new Timestamp(new Date()), Utils.getCurrentHour(), Utils.EDICION));
         }
     }
 }

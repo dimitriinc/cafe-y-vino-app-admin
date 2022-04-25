@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.nfc.cardemulation.HostNfcFService;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
@@ -108,6 +110,18 @@ public class Utils {
         SimpleDateFormat sdf = new SimpleDateFormat(Utils.DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone(Utils.GMT));
         return sdf.format(new Date());
+    }
+
+    public static String getCurrentHour() {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+        String amPm;
+        if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
+            amPm = "AM";
+        } else {
+            amPm = "PM";
+        }
+        return calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + " " + amPm;
     }
 
 }

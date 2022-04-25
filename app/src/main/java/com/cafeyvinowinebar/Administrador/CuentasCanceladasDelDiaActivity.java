@@ -53,15 +53,14 @@ public class CuentasCanceladasDelDiaActivity extends AppCompatActivity {
         Handler mainHandler = new Handler();
         manager = getSupportFragmentManager();
 
-
-
         Intent intent = getIntent();
         if (intent != null) {
             date = intent.getStringExtra(Utils.KEY_DATE);
             if (!date.isEmpty()) {
                 query = fStore.collection(Utils.CUENTAS)
                         .document(date)
-                        .collection("cuentas_canceladas");
+                        .collection("cuentas_canceladas")
+                        .orderBy(Utils.TIMESTAMP);
 
                 setUpRecyclerView();
 
