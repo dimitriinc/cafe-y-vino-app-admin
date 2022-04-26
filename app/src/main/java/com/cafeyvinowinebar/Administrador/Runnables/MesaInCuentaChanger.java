@@ -55,29 +55,6 @@ public class MesaInCuentaChanger implements Runnable {
                             // since this field must have the value of the mesa's name in case of custom pedidos
                             if (Objects.equals(snapshot.getString(Utils.KEY_USER), "Cliente")) {
                                 snapshot.getReference().update(Utils.KEY_USER_ID, newMesa);
-                            } else {
-
-                                // while changing the client table, we also want to unblock the table being changed
-                                // and block the new one
-                                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
-                                        .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
-
-                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
-                                        doc.getReference().update("blocked", false);
-                                    }
-                                });
-
-                                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, newMesa)
-                                        .get().addOnSuccessListener(App.executor, queryDocuments -> {
-
-                                    for (QueryDocumentSnapshot snap : queryDocuments) {
-                                        if (!snap.getBoolean("blocked")) {
-                                            snap.getReference().update("blocked", true);
-                                        }
-                                    }
-                                });
-
-
                             }
                         }
                     }
@@ -90,30 +67,11 @@ public class MesaInCuentaChanger implements Runnable {
                 // if the customer already has an open bill, we update the table there as well
                 snapshot.getReference().update(Utils.KEY_MESA, newMesa);
 
-                // if the cuenta is from a client, we unblock the table being changed, and block the new one
-                if (!Objects.equals(snapshot.getString(Utils.KEY_NAME), "Cliente")) {
+                // if the cuenta belongs to a customized table, we update its userId field
+                // we copy the meta document and its collection of products
+                // and delete the old one (we need the cuenta stored under its new id
+                if (Objects.equals(snapshot.getString(Utils.KEY_NAME), "Cliente")) {
 
-                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
-                            .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
-
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
-                            doc.getReference().update("blocked", false);
-                        }
-                    });
-
-                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, newMesa)
-                            .get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
-
-                        for (QueryDocumentSnapshot snap : queryDocumentSnapshots) {
-                            if (!snap.getBoolean("blocked")) {
-                                snap.getReference().update("blocked", true);
-                            }
-                        }
-                    });
-                } else {
-                    // if the cuenta belongs to a customized table, we update its userId field
-                    // we copy the meta document and its collection of products
-                    // and delete the old one (we need the cuenta stored under its new id
                     DocumentReference newCuentaMetaDoc = fStore.collection(Utils.CUENTAS)
                             .document(Utils.getCurrentDate())
                             .collection("cuentas corrientes")

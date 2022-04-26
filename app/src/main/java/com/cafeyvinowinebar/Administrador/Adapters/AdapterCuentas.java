@@ -17,15 +17,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.Fragments.PayTypePicker;
 import com.cafeyvinowinebar.Administrador.POJOs.Cuenta;
 import com.cafeyvinowinebar.Administrador.POJOs.CuentaItem;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemClickListener;
 import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
 import com.cafeyvinowinebar.Administrador.R;
-import com.cafeyvinowinebar.Administrador.Runnables.CuentaItemDecremenator;
-import com.cafeyvinowinebar.Administrador.Runnables.CuentaItemPlusOne;
 import com.cafeyvinowinebar.Administrador.Utils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -129,9 +126,14 @@ public class AdapterCuentas extends FirestoreRecyclerAdapter<Cuenta, AdapterCuen
             // the id of a cuenta meta doc is the Uid of the user to whom this bill belongs
             String userId = getSnapshots().getSnapshot(getAbsoluteAdapterPosition()).getId();
 
-            // we want only the first name of the user on display
-            String[] userNames = model.getName().split(" ");
-            txtCuentaId.setText(context.getString(R.string.pedido_title, userNames[0], model.getMesa()));
+            if (model.getName().equals("Cliente")) {
+                // no name on display
+                txtCuentaId.setText(context.getString(R.string.custom_user_title, model.getMesa()));
+            } else {
+                // we want only the first name of the user on display
+                String[] userNames = model.getName().split(" ");
+                txtCuentaId.setText(context.getString(R.string.pedido_cuenta_title, userNames[0], model.getMesa()));
+            }
 
             // expand the list item
             imgExp.setOnClickListener(v -> {

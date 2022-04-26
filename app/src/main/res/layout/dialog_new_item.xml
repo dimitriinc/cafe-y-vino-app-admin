@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="artículo"
+        android:hint="producto"
         android:inputType="text"
         android:padding="10dp"
         android:background="@drawable/shape_for_et"

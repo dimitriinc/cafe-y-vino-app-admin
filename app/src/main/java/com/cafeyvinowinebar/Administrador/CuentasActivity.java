@@ -173,7 +173,6 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
                 dialog.dismiss();
 
 
-
             });
 
             dialog.show();
@@ -181,51 +180,41 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
 
         adapter.setOnAddClickListener(((snapshot, position, view) -> {
 
-            boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                    == Configuration.UI_MODE_NIGHT_YES;
-
             // the on click listener is set to the add new product button
             // we build an alert dialog to create a new product
             // no categories needed in a bill
-            AlertDialog.Builder builder = new AlertDialog.Builder(CuentasActivity.this);
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_new_item, null);
 
             EditText nameEt = dialogView.findViewById(R.id.etNewItemCuentaNombre);
             EditText priceEt = dialogView.findViewById(R.id.etNewItemCuentaPrecio);
             EditText countEt = dialogView.findViewById(R.id.etNewItemCuentaCantidad);
-            builder.setView(dialogView);
 
-            builder.setPositiveButton(getString(R.string.agregar), (dialog, which) -> {
+            new AlertDialog.Builder(CuentasActivity.this)
+                    .setView(dialogView)
+                    .setPositiveButton(getString(R.string.agregar), (dialog, which) -> {
 
-                // get the string from the edit texts
-                String name = nameEt.getText().toString().trim();
-                String priceString = priceEt.getText().toString();
-                String countString = countEt.getText().toString();
+                        // get the string from the edit texts
+                        String name = nameEt.getText().toString().trim();
+                        String priceString = priceEt.getText().toString();
+                        String countString = countEt.getText().toString();
 
-                if (name.isEmpty() || priceString.isEmpty() || countString.isEmpty()) {
-                    Toast.makeText(CuentasActivity.this, getString(R.string.llenar_los_campos), Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                        if (name.isEmpty() || priceString.isEmpty() || countString.isEmpty()) {
+                            Toast.makeText(CuentasActivity.this, getString(R.string.llenar_los_campos), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                // convert the numeric strings to longs
-                long price = Long.parseLong(priceString);
-                long count = Long.parseLong(countString);
+                        // convert the numeric strings to longs
+                        long price = Long.parseLong(priceString);
+                        long count = Long.parseLong(countString);
 
-                // get the path of the cuenta meta doc
-                String path = snapshot.getReference().getPath();
+                        // get the path of the cuenta meta doc
+                        String path = snapshot.getReference().getPath();
 
-                App.executor.submit(new NewItemCuentaAdder(name, path, count, price));
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                        App.executor.submit(new NewItemCuentaAdder(name, path, count, price));
+                    })
+                    .create()
+                    .show();
 
-            // make buttons more visible in the dark mode
-            if (isDarkThemeOn) {
-                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                btnPositive.setTextColor(getColor(R.color.white));
-                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                btnNegative.setTextColor(getColor(R.color.white));
-            }
         }));
 
         adapter.setOnRedactClickListener((snapshot, position, view) -> fStore.collection(snapshot.getReference().getPath() + "/cuenta").get()

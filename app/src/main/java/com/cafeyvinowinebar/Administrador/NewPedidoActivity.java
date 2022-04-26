@@ -108,50 +108,38 @@ public class NewPedidoActivity extends AppCompatActivity {
 
         fabCanastaNewItem.setOnClickListener(v -> {
 
-            boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                    == Configuration.UI_MODE_NIGHT_YES;
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_new_item, null);
             EditText nombreEt = dialogView.findViewById(R.id.etNewItemCuentaNombre);
             EditText precioEt = dialogView.findViewById(R.id.etNewItemCuentaPrecio);
             EditText countEt = dialogView.findViewById(R.id.etNewItemCuentaCantidad);
-            builder.setView(dialogView);
-            builder.setPositiveButton(getString(R.string.btn_cocina), (dialog, which) -> {
-                String name = nombreEt.getText().toString().trim();
-                String priceString = precioEt.getText().toString().trim();
-                String countString = countEt.getText().toString().trim();
-                if (name.isEmpty() || priceString.isEmpty() || countString.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.llenar_los_campos), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                long price = Long.parseLong(priceString);
-                long count = Long.parseLong(countEt.getText().toString().trim());
-                productsViewModel.insert(new ProductEntity(name, Utils.COCINA, count, price));
-            });
-            builder.setNegativeButton(getString(R.string.btn_barra), (dialog, which) -> {
-                String name = nombreEt.getText().toString().trim();
-                String priceString = precioEt.getText().toString().trim();
-                String countString = countEt.getText().toString().trim();
-                if (name.isEmpty() || priceString.isEmpty() || countString.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.llenar_los_campos), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                long price = Long.parseLong(priceString);
-                long count = Long.parseLong(countString);
-                productsViewModel.insert(new ProductEntity(name, Utils.BARRA, count, price));
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            // to make the alert dialog more readable in the dark theme
-            if (isDarkThemeOn) {
-                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                btnPositive.setTextColor(getColor(R.color.white));
-                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                btnNegative.setTextColor(getColor(R.color.white));
-            }
-
+            new AlertDialog.Builder(this)
+                    .setView(dialogView)
+                    .setPositiveButton(getString(R.string.btn_cocina), (dialog, which) -> {
+                        String name = nombreEt.getText().toString().trim();
+                        String priceString = precioEt.getText().toString().trim();
+                        String countString = countEt.getText().toString().trim();
+                        if (name.isEmpty() || priceString.isEmpty() || countString.isEmpty()) {
+                            Toast.makeText(this, getString(R.string.llenar_los_campos), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        long price = Long.parseLong(priceString);
+                        long count = Long.parseLong(countEt.getText().toString().trim());
+                        productsViewModel.insert(new ProductEntity(name, Utils.COCINA, count, price));
+                    })
+                    .setNegativeButton(getString(R.string.btn_barra), (dialog, which) -> {
+                        String name = nombreEt.getText().toString().trim();
+                        String priceString = precioEt.getText().toString().trim();
+                        String countString = countEt.getText().toString().trim();
+                        if (name.isEmpty() || priceString.isEmpty() || countString.isEmpty()) {
+                            Toast.makeText(this, getString(R.string.llenar_los_campos), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        long price = Long.parseLong(priceString);
+                        long count = Long.parseLong(countString);
+                        productsViewModel.insert(new ProductEntity(name, Utils.BARRA, count, price));
+                    })
+                    .create()
+                    .show();
 
         });
     }
@@ -206,16 +194,13 @@ public class NewPedidoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                == Configuration.UI_MODE_NIGHT_YES;
-
         // if the back button was pressed by mistake, we want to warn admin that the products in the canasta will be lost
         // though there is no point in warning if the canasta is empty, so we first check it
         if (!Objects.requireNonNull(productsViewModel.getProducts().getValue()).isEmpty()) {
 
             // the canasta isn't empty, we show admin an alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Quieres salir?")
+            new AlertDialog.Builder(this)
+                    .setTitle("Quieres salir?")
                     .setMessage("La canasta se vaciará")
                     .setPositiveButton("SI", (DialogInterface dialogInterface, int i) -> {
 
@@ -223,16 +208,9 @@ public class NewPedidoActivity extends AppCompatActivity {
                         finish();
                         dialogInterface.dismiss();
                     })
-                    .setNegativeButton("NO", (DialogInterface dialogInterface, int i) -> dialogInterface.dismiss());
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                    .setNegativeButton("NO", (DialogInterface dialogInterface, int i) -> dialogInterface.dismiss())
+                    .create().show();
 
-            if (isDarkThemeOn) {
-                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                btnPositive.setTextColor(getColor(R.color.white));
-                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                btnNegative.setTextColor(getColor(R.color.white));
-            }
 
         } else {
             super.onBackPressed();

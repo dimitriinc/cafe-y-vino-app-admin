@@ -8,14 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import androidx.appcompat.app.AlertDialog;
 
-import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,8 +20,6 @@ import android.widget.Toast;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterCustomUsuarios;
 import com.cafeyvinowinebar.Administrador.Adapters.AdapterUsuarios;
 import com.cafeyvinowinebar.Administrador.Fragments.UserSearcher;
-import com.cafeyvinowinebar.Administrador.Interfaces.OnItemClickListener;
-import com.cafeyvinowinebar.Administrador.Interfaces.OnItemLongClickListener;
 import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.cafeyvinowinebar.Administrador.POJOs.Usuario;
 import com.cafeyvinowinebar.Administrador.Runnables.MesaInCuentaChanger;
@@ -32,7 +27,6 @@ import com.cafeyvinowinebar.Administrador.Runnables.PresenceChanger;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -54,8 +48,6 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class UsuariosActivity extends AppCompatActivity {
-
-    private static final String TAG = "UsuariosActivity";
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private final FirebaseMessaging fMessaging = FirebaseMessaging.getInstance();
@@ -126,9 +118,6 @@ public class UsuariosActivity extends AppCompatActivity {
     @SuppressLint("DefaultLocale")
     private void setupClientsAdapter() {
 
-        boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                == Configuration.UI_MODE_NIGHT_YES;
-
         Query query = fStore.collection(Utils.USUARIOS)
                 .whereEqualTo(Utils.IS_PRESENT, true)
                 .orderBy(Utils.KEY_MESA);
@@ -157,25 +146,45 @@ public class UsuariosActivity extends AppCompatActivity {
             builder.setPositiveButton(getString(R.string.cambiar), (dialog, which) -> {
 
                 // updating the table value
-                String mesa = etMesa.getText().toString().trim();
-                if (mesa.isEmpty()) {
+                String newMesa = etMesa.getText().toString().trim();
+                if (newMesa.isEmpty()) {
                     Toast.makeText(getBaseContext(), getString(R.string.usarios_no_mesa), Toast.LENGTH_SHORT).show();
                 } else {
 
                     // table value is stored as a string with a certain format
                     // so we convert the string received from the edit text to a long and then back to string
                     // to make sure that it's of the correct format
-                    long mesaLong = Long.parseLong(mesa);
-                    String mesaFormat = String.format("%02d", mesaLong);
+                    long mesaLong = Long.parseLong(newMesa);
+                    String newMesaFormatted = String.format("%02d", mesaLong);
 
                     // we get the customer's id to look for the open orders and bills assigned to him
                     String userId = snapshot.getId();
 
                     // updates the mesa field in the user's doc
-                    snapshot.getReference().update(Utils.KEY_MESA, mesaFormat);
+                    snapshot.getReference().update(Utils.KEY_MESA, newMesaFormatted);
 
-                    // looks for the customer's orders and bill to updates the mesa field on those docs as well
-                    App.executor.submit(new MesaInCuentaChanger(currentDate, userId, mesaFormat));
+                    // looks for the customer's orders and bill to update the mesa field on those docs as well
+                    App.executor.submit(new MesaInCuentaChanger(currentDate, userId, newMesaFormatted));
+
+                    // also, we handle the mesas collection in the Firestore
+                    // on mesa change we should unblock the old table, and block the new one
+                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
+                            .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+
+                        // old table - unblock
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
+                            doc.getReference().update("blocked", false);
+                        }
+                    });
+
+                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, newMesaFormatted)
+                            .get().addOnSuccessListener(App.executor, queryDocuments -> {
+
+                        // new table - block
+                        for (QueryDocumentSnapshot snap : queryDocuments) {
+                                snap.getReference().update("blocked", true);
+                        }
+                    });
                 }
             });
 
@@ -199,12 +208,6 @@ public class UsuariosActivity extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
 
-            if (isDarkThemeOn) {
-                Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                btnPositive.setTextColor(getColor(R.color.white));
-                Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                btnNegative.setTextColor(getColor(R.color.white));
-            }
         });
 
         // we update the customer's status to 'not present'

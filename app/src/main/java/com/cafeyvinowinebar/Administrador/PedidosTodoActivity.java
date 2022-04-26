@@ -204,9 +204,6 @@ public class PedidosTodoActivity extends AppCompatActivity {
      */
     private void showAddProductDialog(String mode, DocumentSnapshot documentSnapshot) {
 
-        boolean isDarkThemeOn = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                == Configuration.UI_MODE_NIGHT_YES;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(PedidosTodoActivity.this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_new_item, null);
         EditText nombreEt = dialogView.findViewById(R.id.etNewItemCuentaNombre);
@@ -235,15 +232,7 @@ public class PedidosTodoActivity extends AppCompatActivity {
             ));
         }
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        if (isDarkThemeOn) {
-            Button btnPositive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            btnPositive.setTextColor(getColor(R.color.white));
-            Button btnNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-            btnNegative.setTextColor(getColor(R.color.white));
-        }
+        builder.create().show();
     }
 
     /**

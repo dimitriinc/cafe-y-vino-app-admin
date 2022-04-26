@@ -79,7 +79,12 @@ public class AdapterCuentasCanceladas extends FirestoreRecyclerAdapter<CuentaCan
             if (model.getHora() == null) {
                 txtCuentaId.setText(userNames[0]);
             } else {
-                txtCuentaId.setText(context.getString(R.string.cuenta_canc_id, userNames[0], model.getMesa(), model.getHora()));
+                if (model.getName().equals("Cliente")) {
+                    // no name on display
+                    txtCuentaId.setText(context.getString(R.string.custom_cuenta_canc_id, model.getMesa(), model.getHora()));
+                } else {
+                    txtCuentaId.setText(context.getString(R.string.cuenta_canc_id, userNames[0], model.getMesa(), model.getHora()));
+                }
             }
 
 

@@ -122,12 +122,10 @@ public class CuentaCancelador implements Runnable {
                                     // we also should update the 'blocked' status of the table if it's one of the fixed ones
                                     // if the table assigned to the client was not one of the fixed, the mesaId will be null
                                     // and we shouldn't worry about this step
-                                    fStore.collection("mesas").get()
+                                    fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, userMesa).get()
                                             .addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
                                                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
-                                                    if (Objects.equals(doc.getString(Utils.KEY_NAME), userMesa)) {
-                                                        doc.getReference().update("blocked", false);
-                                                    }
+                                                    doc.getReference().update("blocked", false);
                                                 }
                                             });
 

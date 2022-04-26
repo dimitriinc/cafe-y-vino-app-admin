@@ -114,7 +114,12 @@ public class RedactHIstoryActivity extends AppCompatActivity {
         }
 
         private void bind(Redaction model) {
-            txtTitle.setText(getString(R.string.redaction_title, model.getUserName(), model.getMesa(), model.getTime()));
+            if (model.getUserName().equals("Cliente")) {
+                // no name on display
+                txtTitle.setText(getString(R.string.custom_redaction_title, model.getMesa(), model.getTime()));
+            } else {
+                txtTitle.setText(getString(R.string.redaction_title, model.getUserName(), model.getMesa(), model.getTime()));
+            }
             txtComment.setText(model.getComment());
             txtType.setText(model.getType());
 

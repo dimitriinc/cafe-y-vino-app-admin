@@ -3,12 +3,9 @@ package com.cafeyvinowinebar.Administrador.Runnables;
 import android.app.Activity;
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,9 +49,6 @@ public class ReservasOnClickManager implements Runnable {
 
     @Override
     public void run() {
-
-        boolean isDarkThemeOn = (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                == Configuration.UI_MODE_NIGHT_YES;
 
         // first we store the table number
         String mesa = snapshot.getId();
@@ -168,15 +162,8 @@ public class ReservasOnClickManager implements Runnable {
 
                                 mainHandler.post(() -> {
 
-                                    AlertDialog dialogRequest = builder.create();
-                                    dialogRequest.show();
+                                    builder.create().show();
 
-                                    if (isDarkThemeOn) {
-                                        Button btnPositive = dialogRequest.getButton(DialogInterface.BUTTON_POSITIVE);
-                                        btnPositive.setTextColor(context.getColor(R.color.white));
-                                        Button btnNegative = dialogRequest.getButton(DialogInterface.BUTTON_NEGATIVE);
-                                        btnNegative.setTextColor(context.getColor(R.color.white));
-                                    }
                                 });
                             });
                 } else {
@@ -246,15 +233,8 @@ public class ReservasOnClickManager implements Runnable {
 
                     mainHandler.post(() -> {
 
-                        AlertDialog dialogConfirm = builder.create();
-                        dialogConfirm.show();
+                        builder.create().show();
 
-                        if (isDarkThemeOn) {
-                            Button btnPositive = dialogConfirm.getButton(DialogInterface.BUTTON_POSITIVE);
-                            btnPositive.setTextColor(context.getColor(R.color.white));
-                            Button btnNegative = dialogConfirm.getButton(DialogInterface.BUTTON_NEGATIVE);
-                            btnNegative.setTextColor(context.getColor(R.color.white));
-                        }
                     });
                 }
             } else {
@@ -285,15 +265,8 @@ public class ReservasOnClickManager implements Runnable {
 
                 mainHandler.post(() -> {
 
-                    AlertDialog dialogEmpty = builder.create();
-                    dialogEmpty.show();
+                    builder.create().show();
 
-                    if (isDarkThemeOn) {
-                        Button btnPositive = dialogEmpty.getButton(DialogInterface.BUTTON_POSITIVE);
-                        btnPositive.setTextColor(context.getColor(R.color.white));
-                        Button btnNegative = dialogEmpty.getButton(DialogInterface.BUTTON_NEGATIVE);
-                        btnNegative.setTextColor(context.getColor(R.color.white));
-                    }
                 });
             }
         });
