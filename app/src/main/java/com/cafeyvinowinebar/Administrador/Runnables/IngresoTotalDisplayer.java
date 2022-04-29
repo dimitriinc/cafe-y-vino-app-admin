@@ -1,6 +1,5 @@
 package com.cafeyvinowinebar.Administrador.Runnables;
 
-import android.content.Context;
 import android.os.Handler;
 
 import com.cafeyvinowinebar.Administrador.Fragments.IngresoTotal;
@@ -46,8 +45,13 @@ public class IngresoTotalDisplayer implements Runnable {
                 // and increment the 'total' var by this value
                 total += monto;
 
+                // get the propina value
+                Long propina = snapshot.getLong(Utils.PROPINA);
+
                 // then we check how the customer paid for the bill
                 // and depending on the payment mode, we increment the corresponding var
+                // if there were tips left by other means than cash, we add the amount to the corresponding pay type
+                // and subtract the tip from cash
                 switch (Objects.requireNonNull(snapshot.getString(Utils.KEY_PAY_TYPE))) {
 
                     case Utils.EFECTIVO:
@@ -55,16 +59,29 @@ public class IngresoTotalDisplayer implements Runnable {
                         break;
                     case Utils.VISA:
                         totalVisa += monto;
+                        if (propina != null) {
+                            totalVisa += propina;
+                            totalEfectivo -= propina;
+                        }
                         break;
                     case Utils.YAPE:
                         totalYape += monto;
+                        if (propina != null) {
+                            totalYape += propina;
+                            totalEfectivo -= propina;
+                        }
                         break;
                     case Utils.CRIPTO:
                         totalCripto += monto;
+                        if (propina != null) {
+                            totalCripto += propina;
+                            totalEfectivo -= propina;
+                        }
                         break;
 
                     // if the bill was divided by different payment modes, we iterate through the possible modes
                     // and when we encounter a value, which is not null, we increment the corresponding var
+                    // if there is propina, we add it to the visa amount
                     case Utils.DIVIDIDO:
                         Double montoEfectivo = snapshot.getDouble(Utils.EFECTIVO);
                         if (montoEfectivo != null) {
@@ -81,6 +98,10 @@ public class IngresoTotalDisplayer implements Runnable {
                         Double montoCripto = snapshot.getDouble(Utils.CRIPTO);
                         if (montoCripto != null) {
                             totalCripto += montoCripto;
+                        }
+                        if (propina != null) {
+                            totalVisa += propina;
+                            totalEfectivo -= propina;
                         }
 
                     default:

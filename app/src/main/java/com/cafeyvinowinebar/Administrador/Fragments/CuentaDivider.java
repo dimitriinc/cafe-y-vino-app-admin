@@ -39,10 +39,12 @@ public class CuentaDivider extends DialogFragment {
     private FloatingActionButton fabReset;
     public DocumentSnapshot snapshot;
     public double total, montoEfectivo, montoVisa, montoYape, montoCripto;
+    Long propina;
 
-    public CuentaDivider(String currentDate, DocumentSnapshot snapshot) {
+    public CuentaDivider(String currentDate, DocumentSnapshot snapshot, Long propina) {
         this.currentDate = currentDate;
         this.snapshot = snapshot;
+        this.propina = propina;
     }
 
     @Nullable
@@ -106,7 +108,7 @@ public class CuentaDivider extends DialogFragment {
             if (montoEfectivo + montoVisa + montoYape + montoCripto != total) {
                 Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             } else {
-                App.executor.submit(new CuentaCancelador(montoEfectivo, montoVisa, montoYape, montoCripto, snapshot, currentDate, Utils.DIVIDIDO));
+                App.executor.submit(new CuentaCancelador(montoEfectivo, montoVisa, montoYape, montoCripto, snapshot, currentDate, Utils.DIVIDIDO, propina));
                 dismiss();
             }
         });

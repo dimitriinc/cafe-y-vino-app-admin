@@ -72,6 +72,7 @@ public class Utils {
     public static final String YAPE = "yape";
     public static final String CRIPTO = "cripto";
     public static final String DIVIDIDO = "dividido";
+    public static final String PROPINA = "propina";
 
     // firestore root collections
     public static final String USUARIOS = "usuarios";

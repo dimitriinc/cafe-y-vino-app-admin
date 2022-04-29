@@ -39,17 +39,19 @@ public class CuentaCancelador implements Runnable {
     private String userId;
     private String userMesa;
     private String userName;
-    private String mesaId;
     private final String payType;
+    private Long propina;
 
-    public CuentaCancelador(DocumentSnapshot snapshot, String currentDate, String payType) {
+    public CuentaCancelador(DocumentSnapshot snapshot, String currentDate, String payType, Long propina) {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
+        this.propina = propina;
     }
 
     public CuentaCancelador(double montoEfectivo, double montoVisa, double montoYape,
-                            double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType) {
+                            double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType,
+                            Long propina) {
         this.montoEfectivo = montoEfectivo;
         this.montoVisa = montoVisa;
         this.montoYape = montoYape;
@@ -57,6 +59,7 @@ public class CuentaCancelador implements Runnable {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
+        this.propina = propina;
     }
 
     @Override
@@ -67,7 +70,6 @@ public class CuentaCancelador implements Runnable {
         userId = snapshot.getId();
         userMesa = snapshot.getString(Utils.KEY_MESA);
         userName = snapshot.getString(Utils.KEY_NAME);
-        mesaId = snapshot.getString(Utils.MESA_ID);
         total = 0;
 
         // to calculate the total sum of the bill we get the cuenta collection and iterate through its documents
@@ -245,6 +247,10 @@ public class CuentaCancelador implements Runnable {
             data.put(Utils.KEY_META_ID, metaDocId);
             data.put(Utils.TIMESTAMP, new Timestamp(new Date()));
             data.put(Utils.KEY_PAY_TYPE, payType);
+
+            if (propina != null && !payType.equals(Utils.EFECTIVO)) {
+                data.put(Utils.PROPINA, propina);
+            }
 
             // if the bill was divided between different payment types
             // we also add the data of how exactly it was devided, and what were the payment types
