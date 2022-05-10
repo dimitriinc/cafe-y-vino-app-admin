@@ -35,32 +35,35 @@ public class UniquePedidoDeleter implements Runnable {
                 .collection("cuentas corrientes")
                 .whereEqualTo(Utils.KEY_USER_ID, snapshot.getString(Utils.KEY_USER_ID));
 
-        queryPedidos.get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
+        queryPedidos.get().addOnSuccessListener(App.executor, pedidosQuerySnapshot -> {
 
-            if (queryDocumentSnapshots.isEmpty()) {
+            if (pedidosQuerySnapshot.isEmpty()) {
 
                 // client has no other pedidos, so we check if they have a cuenta to their name
-                queryCuentas.get().addOnSuccessListener(App.executor, queryDocumentSnapshots12 -> {
+                queryCuentas.get().addOnSuccessListener(App.executor, cuentaQuerySnapshot -> {
 
-                    if (queryDocumentSnapshots12.isEmpty()) {
+                    if (cuentaQuerySnapshot.isEmpty()) {
 
                         // there is no cuentas either
                         // we unblock the table
                         fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, snapshot.getString(Utils.KEY_MESA))
                                 .get().addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
 
-                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
-                                doc.getReference().update("blocked", false);
-                            }
-                        });
+                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots1) {
+                                        doc.getReference().update("blocked", false);
+                                        doc.getReference().update("present", false);
+                                    }
+                                });
 
-                        // and we close the session
+                        // and we close the session if the pedido or cuenta belongs to a user of the app
                         fStore.collection(Utils.USUARIOS).document(snapshot.getString(Utils.KEY_USER_ID))
                                 .get().addOnSuccessListener(App.executor, documentSnapshot -> {
 
-                            documentSnapshot.getReference().update(Utils.IS_PRESENT, false);
-                            documentSnapshot.getReference().update(Utils.KEY_MESA, "00");
-                        });
+                                    if (documentSnapshot.exists()) {
+                                        documentSnapshot.getReference().update(Utils.IS_PRESENT, false);
+                                        documentSnapshot.getReference().update(Utils.KEY_MESA, "00");
+                                    }
+                                });
                     }
                 });
             }

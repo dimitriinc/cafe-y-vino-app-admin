@@ -72,7 +72,9 @@ public class Utils {
     public static final String YAPE = "yape";
     public static final String CRIPTO = "cripto";
     public static final String DIVIDIDO = "dividido";
-    public static final String PROPINA = "propina";
+    public static final String PROPINA_VISA = "propina_visa";
+    public static final String PROPINA_YAPE = "propina_yape";
+    public static final String PROPINA_CRIPTO = "propina_cripto";
 
     // firestore root collections
     public static final String USUARIOS = "usuarios";
@@ -85,6 +87,7 @@ public class Utils {
     // firestore keys
     public static final String TOTAL = "total";
     public static final String CUENTA = "cuenta";
+    public static final String PEDIDO = "pedido";
     public static final String SERVIDO = "servido";
     public static final String SERVIDO_BARRA = "servidoBarra";
     public static final String SERVIDO_COCINA = "servidoCocina";
@@ -99,7 +102,6 @@ public class Utils {
     public static final String ELIMINACION = "Eliminación";
 
     public static final String[] FIXED_MESAS = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-
 
 
     public static String getMessageId() {

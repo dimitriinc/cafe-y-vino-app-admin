@@ -56,7 +56,7 @@
         android:padding="10dp"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/txtEfectivoDivide"
-        app:layout_constraintEnd_toStartOf="@+id/txtEffectivoOk"
+        app:layout_constraintEnd_toStartOf="@+id/fabEffectivoOk"
         app:layout_constraintTop_toTopOf="@+id/txtEfectivoDivide" />
 
     <TextView
@@ -87,7 +87,7 @@
         android:padding="10dp"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/txtVisaDivide"
-        app:layout_constraintEnd_toStartOf="@+id/txtEffectivoOk"
+        app:layout_constraintEnd_toStartOf="@+id/fabEffectivoOk"
         app:layout_constraintTop_toTopOf="@+id/txtVisaDivide"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -118,7 +118,7 @@
         android:padding="10dp"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/txtYapeDivide"
-        app:layout_constraintEnd_toStartOf="@+id/txtYapeOk"
+        app:layout_constraintEnd_toStartOf="@+id/fabEffectivoOk"
         app:layout_constraintTop_toTopOf="@+id/txtYapeDivide"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -149,7 +149,7 @@
         android:padding="10dp"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/txtCriptoDivide"
-        app:layout_constraintEnd_toStartOf="@+id/txtCriptoOk"
+        app:layout_constraintEnd_toStartOf="@+id/fabEffectivoOk"
         app:layout_constraintTop_toTopOf="@+id/txtCriptoDivide"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -182,57 +182,78 @@
         app:layout_constraintTop_toBottomOf="@+id/btnListo"
         app:maxImageSize="40dp" />
 
-    <TextView
-        android:id="@+id/txtVisaOk"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_round_txt"
-        android:fontFamily="@font/andada"
-        android:gravity="center"
-        android:text="V"
-        android:textColor="@color/black"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabVisaOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="40dp"
+        android:src="@drawable/ic_ok"
         app:layout_constraintBottom_toBottomOf="@+id/edtVisa"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edtVisa" />
 
-    <TextView
-        android:id="@+id/txtEffectivoOk"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_round_txt"
-        android:fontFamily="@font/andada"
-        android:gravity="center"
-        android:text="V"
-        android:textColor="@color/black"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabEffectivoOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="40dp"
+        android:src="@drawable/ic_ok"
         app:layout_constraintBottom_toBottomOf="@+id/edtEfectivo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edtEfectivo" />
 
-    <TextView
-        android:id="@+id/txtYapeOk"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_round_txt"
-        android:fontFamily="@font/andada"
-        android:gravity="center"
-        android:text="V"
-        android:textColor="@color/black"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabYapeOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="40dp"
+        android:src="@drawable/ic_ok"
         app:layout_constraintBottom_toBottomOf="@+id/edtYape"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edtYape" />
 
-    <TextView
-        android:id="@+id/txtCriptoOk"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_round_txt"
-        android:fontFamily="@font/andada"
-        android:gravity="center"
-        android:text="V"
-        android:textColor="@color/black"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCriptoOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="40dp"
+        android:src="@drawable/ic_ok"
         app:layout_constraintBottom_toBottomOf="@+id/edtCripto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/edtCripto" />
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnTipVisa"
+        android:text="@string/tip"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/edtVisa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtVisa"/>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnTipYape"
+        android:text="@string/tip"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/edtYape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtYape"/>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnTipCripto"
+        android:text="@string/tip"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/edtCripto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtCripto"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

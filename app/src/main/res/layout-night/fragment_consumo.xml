@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recConsumo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/list_item_consumo" />
+
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/layNext"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/recConsumo"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:background="@drawable/shape_rectangular"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/recConsumo">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imgConsumoNext"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+
+<!--            android:paddingHorizontal="50dp"-->
+<!--            android:paddingVertical="15dp"-->
+<!--            android:src="@drawable/ic_next"-->
+<!--            app:tint="@color/white" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imgConsumoPrevioius"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:paddingHorizontal="50dp"-->
+<!--            android:paddingVertical="15dp"-->
+<!--            android:src="@drawable/ic_previous"-->
+<!--            android:visibility="gone"-->
+<!--            app:tint="@color/white" />-->
+
+<!--    </RelativeLayout>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

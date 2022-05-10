@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.cafeyvinowinebar.Administrador.App;
@@ -32,19 +34,20 @@ public class CuentaDivider extends DialogFragment {
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
-    private TextView txtSumToDivide, txtEfectivoOk, txtVisaOk, txtYapeOk, txtCriptoOk;
+    private TextView txtSumToDivide;
+    private FloatingActionButton fabEfectivoOk, fabVisaOk, fabYapeOk, fabCriptoOk;
+    private Button btnTipVisa, btnTipYape, btnTipCripto;
     private EditText edtEfectivo, edtVisa, edtYape, edtCripto;
     private Button btnListo;
     public String currentDate;
     private FloatingActionButton fabReset;
     public DocumentSnapshot snapshot;
     public double total, montoEfectivo, montoVisa, montoYape, montoCripto;
-    Long propina;
+    Long propinaVisa, propinaYape, propinaCripto;
 
-    public CuentaDivider(String currentDate, DocumentSnapshot snapshot, Long propina) {
+    public CuentaDivider(String currentDate, DocumentSnapshot snapshot) {
         this.currentDate = currentDate;
         this.snapshot = snapshot;
-        this.propina = propina;
     }
 
     @Nullable
@@ -72,15 +75,21 @@ public class CuentaDivider extends DialogFragment {
                     new Handler(Looper.getMainLooper()).post(() -> txtSumToDivide.setText(String.valueOf(total)));
                 });
 
-        txtEfectivoOk.setOnClickListener(v -> acceptDivision(edtEfectivo, Utils.EFECTIVO));
+        fabEfectivoOk.setOnClickListener(v -> acceptDivision(edtEfectivo, Utils.EFECTIVO));
 
-        txtVisaOk.setOnClickListener(v -> acceptDivision(edtVisa, Utils.VISA));
+        fabVisaOk.setOnClickListener(v -> acceptDivision(edtVisa, Utils.VISA));
 
-        txtYapeOk.setOnClickListener(v -> acceptDivision(edtYape, Utils.YAPE));
+        fabYapeOk.setOnClickListener(v -> acceptDivision(edtYape, Utils.YAPE));
 
-        txtCriptoOk.setOnClickListener(v -> acceptDivision(edtCripto, Utils.CRIPTO));
+        fabCriptoOk.setOnClickListener(v -> acceptDivision(edtCripto, Utils.CRIPTO));
 
-        // clears all the values, make the ok text views visible, reset the listeners;
+        btnTipVisa.setOnClickListener(v -> showTipDialog(Utils.VISA));
+
+        btnTipYape.setOnClickListener(v -> showTipDialog(Utils.YAPE));
+
+        btnTipCripto.setOnClickListener(v -> showTipDialog(Utils.CRIPTO));
+
+        // clears all the values, make the ok text views visible, tip buttons gone, reset the listeners;
         // and admin starts again
         fabReset.setOnClickListener(v -> {
             txtSumToDivide.setText(String.valueOf(total));
@@ -88,18 +97,24 @@ public class CuentaDivider extends DialogFragment {
             montoVisa = 0;
             montoYape = 0;
             montoCripto = 0;
+            propinaVisa = null;
+            propinaCripto = null;
+            propinaYape = null;
             edtEfectivo.getText().clear();
             edtVisa.getText().clear();
             edtYape.getText().clear();
             edtCripto.getText().clear();
-            txtEfectivoOk.setVisibility(View.VISIBLE);
-            txtVisaOk.setVisibility(View.VISIBLE);
-            txtYapeOk.setVisibility(View.VISIBLE);
-            txtCriptoOk.setVisibility(View.VISIBLE);
-            txtEfectivoOk.setOnClickListener(vi -> acceptDivision(edtEfectivo, Utils.EFECTIVO));
-            txtVisaOk.setOnClickListener(vi -> acceptDivision(edtVisa, Utils.VISA));
-            txtYapeOk.setOnClickListener(vi -> acceptDivision(edtYape, Utils.YAPE));
-            txtCriptoOk.setOnClickListener(vi -> acceptDivision(edtCripto, Utils.CRIPTO));
+            fabEfectivoOk.setVisibility(View.VISIBLE);
+            fabVisaOk.setVisibility(View.VISIBLE);
+            fabYapeOk.setVisibility(View.VISIBLE);
+            fabCriptoOk.setVisibility(View.VISIBLE);
+            btnTipVisa.setVisibility(View.GONE);
+            btnTipYape.setVisibility(View.GONE);
+            btnTipCripto.setVisibility(View.GONE);
+            fabEfectivoOk.setOnClickListener(vi -> acceptDivision(edtEfectivo, Utils.EFECTIVO));
+            fabVisaOk.setOnClickListener(vi -> acceptDivision(edtVisa, Utils.VISA));
+            fabYapeOk.setOnClickListener(vi -> acceptDivision(edtYape, Utils.YAPE));
+            fabCriptoOk.setOnClickListener(vi -> acceptDivision(edtCripto, Utils.CRIPTO));
         });
 
         btnListo.setOnClickListener(v -> {
@@ -108,7 +123,8 @@ public class CuentaDivider extends DialogFragment {
             if (montoEfectivo + montoVisa + montoYape + montoCripto != total) {
                 Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             } else {
-                App.executor.submit(new CuentaCancelador(montoEfectivo, montoVisa, montoYape, montoCripto, snapshot, currentDate, Utils.DIVIDIDO, propina));
+                App.executor.submit(new CuentaCancelador(montoEfectivo, montoVisa, montoYape, montoCripto, snapshot, currentDate, Utils.DIVIDIDO,
+                        propinaVisa, propinaYape, propinaCripto));
                 dismiss();
             }
         });
@@ -118,16 +134,19 @@ public class CuentaDivider extends DialogFragment {
 
     private void init(View view) {
         txtSumToDivide = view.findViewById(R.id.txtSumToDivide);
-        txtEfectivoOk = view.findViewById(R.id.txtEffectivoOk);
-        txtVisaOk = view.findViewById(R.id.txtVisaOk);
-        txtYapeOk = view.findViewById(R.id.txtYapeOk);
-        txtCriptoOk = view.findViewById(R.id.txtCriptoOk);
+        fabEfectivoOk = view.findViewById(R.id.fabEffectivoOk);
+        fabVisaOk = view.findViewById(R.id.fabVisaOk);
+        fabYapeOk = view.findViewById(R.id.fabYapeOk);
+        fabCriptoOk = view.findViewById(R.id.fabCriptoOk);
         edtEfectivo = view.findViewById(R.id.edtEfectivo);
         edtVisa = view.findViewById(R.id.edtVisa);
         edtYape = view.findViewById(R.id.edtYape);
         edtCripto = view.findViewById(R.id.edtCripto);
         fabReset = view.findViewById(R.id.fabReset);
         btnListo = view.findViewById(R.id.btnListo);
+        btnTipCripto = view.findViewById(R.id.btnTipCripto);
+        btnTipVisa = view.findViewById(R.id.btnTipVisa);
+        btnTipYape = view.findViewById(R.id.btnTipYape);
     }
 
     /**
@@ -147,23 +166,26 @@ public class CuentaDivider extends DialogFragment {
             switch (montoType) {
                 case Utils.EFECTIVO:
                     montoEfectivo = inputNum;
-                    txtEfectivoOk.setVisibility(View.INVISIBLE);
-                    txtEfectivoOk.setOnClickListener(null);
+                    fabEfectivoOk.setVisibility(View.INVISIBLE);
+                    fabEfectivoOk.setOnClickListener(null);
                     break;
                 case Utils.VISA:
                     montoVisa = inputNum;
-                    txtVisaOk.setVisibility(View.INVISIBLE);
-                    txtVisaOk.setOnLongClickListener(null);
+                    fabVisaOk.setVisibility(View.GONE);
+                    fabVisaOk.setOnLongClickListener(null);
+                    btnTipVisa.setVisibility(View.VISIBLE);
                     break;
                 case Utils.YAPE:
                     montoYape = inputNum;
-                    txtYapeOk.setVisibility(View.INVISIBLE);
-                    txtVisaOk.setOnClickListener(null);
+                    fabYapeOk.setVisibility(View.GONE);
+                    fabYapeOk.setOnClickListener(null);
+                    btnTipYape.setVisibility(View.VISIBLE);
                     break;
                 case Utils.CRIPTO:
                     montoCripto = inputNum;
-                    txtCriptoOk.setVisibility(View.INVISIBLE);
-                    txtCriptoOk.setOnClickListener(null);
+                    fabCriptoOk.setVisibility(View.GONE);
+                    fabCriptoOk.setOnClickListener(null);
+                    btnTipCripto.setVisibility(View.VISIBLE);
                     break;
             }
 
@@ -171,5 +193,44 @@ public class CuentaDivider extends DialogFragment {
             txtSumToDivide.setText(String.valueOf(resto));
 
         }
+    }
+
+    /**
+     * Displays a dialog to initialize a tip value depending on the payment type
+     */
+    private void showTipDialog(String tipVersion) {
+
+        // not to create a new layout, we'll use the one for custom mesa, and change some of its specs
+        View tipView = getLayoutInflater().inflate(R.layout.dialog_custom_mesa, null);
+        EditText edtTip = tipView.findViewById(R.id.edtNewMesa);
+        FloatingActionButton fabTipOk = tipView.findViewById(R.id.fabOkNewMesa);
+        edtTip.setHint(R.string.tip);
+        edtTip.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(tipView)
+                .create();
+
+        fabTipOk.setOnClickListener(tipV -> {
+            String tip = edtTip.getText().toString().trim();
+            if (!tip.isEmpty()) {
+                switch (tipVersion) {
+                    case Utils.VISA:
+                        propinaVisa = Long.parseLong(tip);
+                        break;
+                    case Utils.YAPE:
+                        propinaYape = Long.parseLong(tip);
+                        break;
+                    case Utils.CRIPTO:
+                        propinaCripto = Long.parseLong(tip);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

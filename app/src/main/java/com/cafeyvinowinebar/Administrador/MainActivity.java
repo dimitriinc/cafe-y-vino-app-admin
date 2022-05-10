@@ -1,13 +1,13 @@
 package com.cafeyvinowinebar.Administrador;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cafeyvinowinebar.Administrador.POJOs.Mesa;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private final FirebaseMessaging fMessaging = FirebaseMessaging.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         TextView txtReservas = findViewById(R.id.txtReservas);
         TextView txtCuentas = findViewById(R.id.txtCuentas);
         TextView txtUsarios = findViewById(R.id.txtUsuarios);
+        ImageView imgVersionName = findViewById(R.id.imgVersionName);
+        ImageView imgRegToken = findViewById(R.id.imgRegToken);
 
 
         txtMenu.setOnClickListener(v -> startActivity(new Intent(this, MainMenuActivity.class)));
@@ -44,9 +47,19 @@ public class MainActivity extends AppCompatActivity {
         txtCuentas.setOnClickListener(v -> startActivity(new Intent(this, CuentasActivity.class)));
         txtUsarios.setOnClickListener(v -> startActivity(new Intent(this, UsuariosActivity.class)));
 
-//        for (String name : Utils.FIXED_MESAS) {
-//            fStore.collection("mesas").add(new Mesa(false, true, false, name));
-//        }
+        imgVersionName.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Version")
+                    .setMessage(BuildConfig.VERSION_NAME)
+                    .create()
+                    .show();
+
+        });
+
+        imgRegToken.setOnClickListener(v -> fMessaging.getToken().addOnSuccessListener(App.executor, s ->
+                fStore.collection(Utils.ADMINS)
+                        .document(user.getUid())
+                        .update(Utils.KEY_TOKEN, s)));
 
 
     }

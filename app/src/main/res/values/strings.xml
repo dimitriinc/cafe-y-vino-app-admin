@@ -11,7 +11,6 @@
 
 
     <string name="pedido">pedido</string>
-    <string name="pedidos">pedidos</string>
     <string name="pedidos_enviados">pedidos enviados del %1$s</string>
     <string name="confirmar">Confirmar</string>
     <string name="aceptar">Aceptar</string>
@@ -110,6 +109,14 @@
     <string name="bebidas_calientes">Bebidas Calientes</string>
     <string name="ofertas">Ofertas</string>
     <string name="propina">Propina</string>
+
+    <string name="carta">Carta</string>
+    <string name="pedidos">Pedidos</string>
+    <string name="cuentas">Cuentas</string>
+    <string name="reservas">Reservas</string>
+    <string name="usuarios">Usuarios</string>
+    <string name="logout">Logout?</string>
+    <string name="tip">Tip</string>
 
 
 </resources>

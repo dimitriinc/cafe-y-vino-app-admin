@@ -33,6 +33,7 @@ public class PayTypePicker extends DialogFragment {
     public String currentDate;
     private final FragmentManager manager;
     private EditText edtPropina;
+    Long propinaVisa, propinaYape, propinaCripto;
 
     public PayTypePicker(DocumentSnapshot snapshot, String currentDate, FragmentManager manager) {
         this.snapshot = snapshot;
@@ -54,23 +55,26 @@ public class PayTypePicker extends DialogFragment {
         edtPropina = view.findViewById(R.id.edtPropina);
 
         txtCash.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.EFECTIVO, getPropina()));
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.EFECTIVO, propinaVisa, propinaYape, propinaCripto));
             dismiss();
         });
         txtVisa.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.VISA, getPropina()));
+            getPropina(Utils.VISA);
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.VISA, propinaVisa, propinaYape, propinaCripto));
             dismiss();
         });
         txtYape.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.YAPE, getPropina()));
+            getPropina(Utils.YAPE);
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.YAPE, propinaVisa, propinaYape, propinaCripto));
             dismiss();
         });
         txtCripto.setOnClickListener(v -> {
-            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.CRIPTO, getPropina()));
+            getPropina(Utils.CRIPTO);
+            App.executor.submit(new CuentaCancelador(snapshot, currentDate, Utils.CRIPTO, propinaVisa, propinaYape, propinaCripto));
             dismiss();
         });
         btnDivide.setOnClickListener(v -> {
-            CuentaDivider fragment = new CuentaDivider(currentDate, snapshot, getPropina());
+            CuentaDivider fragment = new CuentaDivider(currentDate, snapshot);
             fragment.show(manager, Utils.TAG);
             dismiss();
         });
@@ -78,7 +82,19 @@ public class PayTypePicker extends DialogFragment {
         return view;
     }
 
-    private Long getPropina() {
-        return Long.parseLong(edtPropina.getText().toString().trim());
+    private void getPropina(String payType) {
+        switch (payType) {
+            case Utils.VISA:
+                propinaVisa = Long.parseLong(edtPropina.getText().toString().trim());
+                break;
+            case Utils.YAPE:
+                propinaYape = Long.parseLong(edtPropina.getText().toString().trim());
+                break;
+            case Utils.CRIPTO:
+                propinaCripto = Long.parseLong(edtPropina.getText().toString().trim());
+                break;
+            default:
+                break;
+        }
     }
 }

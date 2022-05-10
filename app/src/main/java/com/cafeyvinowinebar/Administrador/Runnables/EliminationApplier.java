@@ -15,23 +15,27 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
- * creates a redaction object out of pedido o cuenta before deleting it
+ * creates a redaction object out of pedido or cuenta before deleting it
  * stores the redaction into the cambios collection in the Firestore
+ * deletes the products inside the pedido or cuenta collection
  */
 public class EliminationApplier implements Runnable {
 
     private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     private final String userName, mesa, comment, collectionPath;
+    private final CountDownLatch latch;
 
-    public EliminationApplier(String userName, String mesa, String comment, String collectionPath) {
+    public EliminationApplier(String userName, String mesa, String comment, String collectionPath, CountDownLatch latch) {
 
         this.userName = userName;
         this.mesa = mesa;
         this.comment = comment;
         this.collectionPath = collectionPath;
+        this.latch = latch;
     }
 
     @Override
@@ -46,6 +50,13 @@ public class EliminationApplier implements Runnable {
 
                     for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                         content.put(snapshot.getString(Utils.KEY_NAME), String.valueOf(snapshot.getLong(Utils.KEY_COUNT)));
+
+                        // delete the produce from db
+                        snapshot.getReference().delete().addOnSuccessListener(App.executor, unused -> {
+                            if (snapshot.equals(queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1))) {
+                                latch.countDown();
+                            }
+                        });
                     }
 
                     // construct the time string

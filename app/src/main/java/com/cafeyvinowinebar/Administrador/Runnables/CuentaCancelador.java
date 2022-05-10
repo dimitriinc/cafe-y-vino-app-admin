@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Takes all the items in the pending bill collection and moves them to a cuenta cancelada collection
@@ -40,18 +41,21 @@ public class CuentaCancelador implements Runnable {
     private String userMesa;
     private String userName;
     private final String payType;
-    private Long propina;
+    private Long propinaVisa, propinaYape, propinaCripto;
 
-    public CuentaCancelador(DocumentSnapshot snapshot, String currentDate, String payType, Long propina) {
+    public CuentaCancelador(DocumentSnapshot snapshot, String currentDate, String payType,
+                            Long propinaVisa, Long propinaYape, Long propinaCripto) {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
-        this.propina = propina;
+        this.propinaVisa = propinaVisa;
+        this.propinaYape = propinaYape;
+        this.propinaCripto = propinaCripto;
     }
 
     public CuentaCancelador(double montoEfectivo, double montoVisa, double montoYape,
                             double montoCripto, DocumentSnapshot snapshot, String currentDate, String payType,
-                            Long propina) {
+                            Long propinaVisa, Long propinaYape, Long propinaCripto) {
         this.montoEfectivo = montoEfectivo;
         this.montoVisa = montoVisa;
         this.montoYape = montoYape;
@@ -59,7 +63,9 @@ public class CuentaCancelador implements Runnable {
         this.snapshot = snapshot;
         this.currentDate = currentDate;
         this.payType = payType;
-        this.propina = propina;
+        this.propinaVisa = propinaVisa;
+        this.propinaYape = propinaYape;
+        this.propinaCripto = propinaCripto;
     }
 
     @Override
@@ -169,6 +175,8 @@ public class CuentaCancelador implements Runnable {
                 .collection("cuentas_canceladas")
                 .document(metaDocId);
 
+        CountDownLatch latch = new CountDownLatch(1);
+
         fromPath.get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
 
             // get the pending cuenta collection and iterate through its items
@@ -200,7 +208,7 @@ public class CuentaCancelador implements Runnable {
                     }
                 });
 
-                // next operation depends on to whom belongs the bill: to a custom user, or a user of the app
+                // next operation is only for the user of the client app, it adds the product to the personal consumo collection
                 // reminder: IDs of the bills of custom users correspond to the table number
                 if (!userName.equals("Cliente")) {
                     // means the cuenta belongs to a user of the app
@@ -227,69 +235,92 @@ public class CuentaCancelador implements Runnable {
                 }
 
                 // copy the item to the cuenta cancelada collection, and then delete it
-                toPath.add(cuentaProductSnapshot.getData())
-                        .addOnSuccessListener(App.executor, documentReference ->
-                                cuentaProductSnapshot.getReference().delete());
-
-            }
+                toPath.add(cuentaProductSnapshot.getData());
 
 
-            // at this point the iteration is over, so we can handle the meta doc of the canceled bill
-            // create an object
-            Map<String, Object> data = new HashMap<>();
-            data.put(Utils.KEY_NAME, userName);
-            data.put(Utils.KEY_IS_EXPANDED, false);
-            data.put(Utils.KEY_HORA, Utils.getCurrentHour());
-            data.put(Utils.TOTAL, String.valueOf(total));
-            data.put(Utils.KEY_MESA, userMesa);
-            data.put(Utils.KEY_USER_ID, userId);
-            data.put(Utils.KEY_FECHA, currentDate);
-            data.put(Utils.KEY_META_ID, metaDocId);
-            data.put(Utils.TIMESTAMP, new Timestamp(new Date()));
-            data.put(Utils.KEY_PAY_TYPE, payType);
+                cuentaProductSnapshot.getReference().delete().addOnSuccessListener(App.executor, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
 
-            if (propina != null && !payType.equals(Utils.EFECTIVO)) {
-                data.put(Utils.PROPINA, propina);
-            }
-
-            // if the bill was divided between different payment types
-            // we also add the data of how exactly it was devided, and what were the payment types
-            // we'll use this data when calculating a report for total earnings for the day, and for the spending stats of the user
-            if (payType.equals(Utils.DIVIDIDO)) {
-                if (montoEfectivo != 0) {
-                    data.put(Utils.EFECTIVO, montoEfectivo);
-                }
-                if (montoVisa != 0) {
-                    data.put(Utils.VISA, montoVisa);
-                }
-                if (montoYape != 0) {
-                    data.put(Utils.YAPE, montoYape);
-                }
-                if (montoCripto != 0) {
-                    data.put(Utils.CRIPTO, montoCripto);
-                }
-            }
-
-            // set the prepared object as a meta doc of the canceled bill
-            toDoc.set(data);
-
-            // finally, we handle custom tables
-            // if the table in question is a fixed one, we update its presence status to false
-            // if it's not a fixed one, we delete it
-            if (userName.equals("Cliente")) {
-
-                fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, userMesa).get()
-                        .addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
-
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots1) {
-                                if (snapshot.getBoolean("fixed")) {
-                                    snapshot.getReference().update("present", false);
-                                } else {
-                                    snapshot.getReference().delete();
-                                }
-                            }
-                        });
+                        // if the product is the last one in the collection, release the latch
+                        if (cuentaProductSnapshot.equals(queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1))) {
+                            latch.countDown();
+                        }
+                    }
+                });
             }
         });
+
+        // to prevent meta doc being deleted before all the products are deleted we will latch the thread
+        // untill the iteration is over and all the items are deleted for good
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // at this point the iteration is over, so we can handle the meta doc of the canceled bill
+        // create an object
+        Map<String, Object> data = new HashMap<>();
+        data.put(Utils.KEY_NAME, userName);
+        data.put(Utils.KEY_IS_EXPANDED, false);
+        data.put(Utils.KEY_HORA, Utils.getCurrentHour());
+        data.put(Utils.TOTAL, String.valueOf(total));
+        data.put(Utils.KEY_MESA, userMesa);
+        data.put(Utils.KEY_USER_ID, userId);
+        data.put(Utils.KEY_FECHA, currentDate);
+        data.put(Utils.KEY_META_ID, metaDocId);
+        data.put(Utils.TIMESTAMP, new Timestamp(new Date()));
+        data.put(Utils.KEY_PAY_TYPE, payType);
+
+        if (propinaVisa != null) {
+            data.put(Utils.PROPINA_VISA, propinaVisa);
+        }
+        if (propinaYape != null) {
+            data.put(Utils.PROPINA_YAPE, propinaYape);
+        }
+        if (propinaCripto != null) {
+            data.put(Utils.PROPINA_CRIPTO, propinaCripto);
+        }
+
+        // if the bill was divided between different payment types
+        // we also add the data of how exactly it was devided, and what were the payment types
+        // we'll use this data when calculating a report for total earnings for the day, and for the spending stats of the user
+        if (payType.equals(Utils.DIVIDIDO)) {
+            if (montoEfectivo != 0) {
+                data.put(Utils.EFECTIVO, montoEfectivo);
+            }
+            if (montoVisa != 0) {
+                data.put(Utils.VISA, montoVisa);
+            }
+            if (montoYape != 0) {
+                data.put(Utils.YAPE, montoYape);
+            }
+            if (montoCripto != 0) {
+                data.put(Utils.CRIPTO, montoCripto);
+            }
+        }
+
+        // set the prepared object as a meta doc of the canceled bill
+        toDoc.set(data);
+
+        // finally, we handle custom tables
+        // if the table in question is a fixed one, we update its presence status to false
+        // if it's not a fixed one, we delete it
+        if (userName.equals("Cliente")) {
+
+            fStore.collection("mesas").whereEqualTo(Utils.KEY_NAME, userMesa).get()
+                    .addOnSuccessListener(App.executor, queryDocumentSnapshots1 -> {
+
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots1) {
+                            if (snapshot.getBoolean("fixed")) {
+                                snapshot.getReference().update("present", false);
+                            } else {
+                                snapshot.getReference().delete();
+                            }
+                        }
+                    });
+        }
+
     }
 }

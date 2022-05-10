@@ -8,8 +8,39 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recConsumo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_centerInParent="true" />
+        tools:listitem="@layout/list_item_consumo"
+        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"/>
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/shape_rectangular"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:id="@+id/layNext"-->
+<!--        android:layout_below="@+id/recConsumo">-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:id="@+id/imgConsumoNext"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_next"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:paddingHorizontal="50dp"-->
+<!--            android:paddingVertical="15dp"/>-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_previous"-->
+<!--            android:id="@+id/imgConsumoPrevioius"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:paddingHorizontal="50dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:paddingVertical="15dp"/>-->
+
+<!--    </RelativeLayout>-->
+
 </RelativeLayout>

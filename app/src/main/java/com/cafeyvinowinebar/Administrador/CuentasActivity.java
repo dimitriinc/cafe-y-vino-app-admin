@@ -27,6 +27,7 @@ import com.cafeyvinowinebar.Administrador.POJOs.Cuenta;
 import com.cafeyvinowinebar.Administrador.Runnables.CollectionDeleter;
 import com.cafeyvinowinebar.Administrador.Runnables.EliminationApplier;
 import com.cafeyvinowinebar.Administrador.Runnables.NewItemCuentaAdder;
+import com.cafeyvinowinebar.Administrador.Runnables.PedidoOrCuentaForceDeleter;
 import com.cafeyvinowinebar.Administrador.Runnables.UniquePedidoDeleter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -158,21 +159,11 @@ public class CuentasActivity extends AppCompatActivity implements DatePickerDial
                 if (comment.isEmpty()) {
                     comment = "sin comentario";
                 }
-                App.executor.submit(new EliminationApplier(
-                        snapshot.getString(Utils.KEY_NAME),
-                        snapshot.getString(Utils.KEY_MESA),
-                        comment,
-                        snapshot.getReference().getPath() + "/cuenta"));
 
-                snapshot.getReference().delete().addOnSuccessListener(App.executor, unused -> {
+                // handle the deletion on a background thread
+                App.executor.submit(new PedidoOrCuentaForceDeleter(snapshot, comment, Utils.CUENTA));
 
-                    // if the client doesn't have any pedidos assigned to them, we want to close the session and unblock the table
-                    // we do it after the deletion is done, so the runnable doesn't think the client still has a cuenta
-                    App.executor.submit(new UniquePedidoDeleter(snapshot));
-                });
                 dialog.dismiss();
-
-
             });
 
             dialog.show();

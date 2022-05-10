@@ -11,7 +11,7 @@
     android:layout_gravity="center">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/imgVersionName"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
@@ -28,7 +28,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:fontFamily="@font/amatic_sc_bold"
-        android:text="Reservas"
+        android:text="@string/reservas"
         android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/txtMenu"
@@ -43,12 +43,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="60dp"
         android:fontFamily="@font/amatic_sc_bold"
-        android:text="Carta"
+        android:text="@string/carta"
         android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView1" />
+        app:layout_constraintTop_toBottomOf="@+id/imgRegToken" />
 
     <TextView
         android:id="@+id/txtPedidos"
@@ -57,7 +57,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:fontFamily="@font/amatic_sc_bold"
-        android:text="Pedidos"
+        android:text="@string/pedidos"
         android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/txtMenu"
@@ -71,7 +71,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:fontFamily="@font/amatic_sc_bold"
-        android:text="Cuentas"
+        android:text="@string/cuentas"
         android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/txtMenu"
@@ -85,7 +85,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:fontFamily="@font/amatic_sc_bold"
-        android:text="Usuarios"
+        android:text="@string/usuarios"
         android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/txtMenu"
@@ -93,7 +93,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtReservas" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imgRegToken"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"

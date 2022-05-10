@@ -23,6 +23,7 @@ import com.cafeyvinowinebar.Administrador.POJOs.Pedido;
 import com.cafeyvinowinebar.Administrador.Runnables.EliminationApplier;
 import com.cafeyvinowinebar.Administrador.Runnables.NewItemPedidoAdder;
 import com.cafeyvinowinebar.Administrador.Runnables.CollectionDeleter;
+import com.cafeyvinowinebar.Administrador.Runnables.PedidoOrCuentaForceDeleter;
 import com.cafeyvinowinebar.Administrador.Runnables.UniquePedidoDeleter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -149,19 +150,11 @@ public class PedidosTodoActivity extends AppCompatActivity {
                     if (comment.isEmpty()) {
                         comment = "sin comentario";
                     }
-                    App.executor.submit(new EliminationApplier(
-                            snapshot.getString(Utils.KEY_USER),
-                            snapshot.getString(Utils.KEY_MESA),
-                            comment,
-                            snapshot.getReference().getPath() + "/pedido"));
 
-                    snapshot.getReference().delete();
+                    // handle the deletion on a background thread
+                    App.executor.submit(new PedidoOrCuentaForceDeleter(snapshot, comment, Utils.PEDIDO));
+
                     dialog.dismiss();
-
-                    // finally, we handle the case when apart from the pedido being deleted,
-                    // the client doesn't have any other ones, neither does he have a cuenta to their name
-                    // in this case we need to close the session for the client, and unblock their table in the mesas collection
-                    App.executor.submit(new UniquePedidoDeleter(snapshot));
 
                 });
 

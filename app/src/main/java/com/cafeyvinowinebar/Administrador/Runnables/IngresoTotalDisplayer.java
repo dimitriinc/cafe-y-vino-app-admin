@@ -45,8 +45,24 @@ public class IngresoTotalDisplayer implements Runnable {
                 // and increment the 'total' var by this value
                 total += monto;
 
-                // get the propina value
-                Long propina = snapshot.getLong(Utils.PROPINA);
+                // get the possible propina values
+                Long propinaVisa = snapshot.getLong(Utils.PROPINA_VISA);
+                Long propinaYape = snapshot.getLong(Utils.PROPINA_YAPE);
+                Long propinaCripto = snapshot.getLong(Utils.PROPINA_CRIPTO);
+
+                // process the propina values
+                if (propinaVisa != null) {
+                    totalVisa += propinaVisa;
+                    totalEfectivo -= propinaVisa;
+                }
+                if (propinaYape != null) {
+                    totalYape += propinaYape;
+                    totalEfectivo -= propinaYape;
+                }
+                if (propinaCripto != null) {
+                    totalCripto += propinaCripto;
+                    totalEfectivo -= propinaCripto;
+                }
 
                 // then we check how the customer paid for the bill
                 // and depending on the payment mode, we increment the corresponding var
@@ -59,24 +75,12 @@ public class IngresoTotalDisplayer implements Runnable {
                         break;
                     case Utils.VISA:
                         totalVisa += monto;
-                        if (propina != null) {
-                            totalVisa += propina;
-                            totalEfectivo -= propina;
-                        }
                         break;
                     case Utils.YAPE:
                         totalYape += monto;
-                        if (propina != null) {
-                            totalYape += propina;
-                            totalEfectivo -= propina;
-                        }
                         break;
                     case Utils.CRIPTO:
                         totalCripto += monto;
-                        if (propina != null) {
-                            totalCripto += propina;
-                            totalEfectivo -= propina;
-                        }
                         break;
 
                     // if the bill was divided by different payment modes, we iterate through the possible modes
@@ -98,10 +102,6 @@ public class IngresoTotalDisplayer implements Runnable {
                         Double montoCripto = snapshot.getDouble(Utils.CRIPTO);
                         if (montoCripto != null) {
                             totalCripto += montoCripto;
-                        }
-                        if (propina != null) {
-                            totalVisa += propina;
-                            totalEfectivo -= propina;
                         }
 
                     default:
