@@ -17,6 +17,7 @@ import com.cafeyvinowinebar.Administrador.Adapters.AdapterConsumo;
 import com.cafeyvinowinebar.Administrador.App;
 import com.cafeyvinowinebar.Administrador.POJOs.CuentaItem;
 import com.cafeyvinowinebar.Administrador.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -38,8 +39,6 @@ public class Consumo extends DialogFragment {
     private final Query query;
 //    private DocumentSnapshot firstVisible, previousFirstVisible;
     private AdapterConsumo adapter;
-//    private ImageView imgNext, imgPrevious;
-    private RecyclerView recConsumo;
 
     public Consumo(Query query) {
         this.query = query;
@@ -50,43 +49,60 @@ public class Consumo extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_consumo, container);
-        adapter = new AdapterConsumo();
-        recConsumo = view.findViewById(R.id.recConsumo);
+
+        FirestoreRecyclerOptions<CuentaItem> options = new FirestoreRecyclerOptions.Builder<CuentaItem>()
+                .setQuery(query, CuentaItem.class)
+                .build();
+        adapter = new AdapterConsumo(options);
+        //    private ImageView imgNext, imgPrevious;
+        RecyclerView recConsumo = view.findViewById(R.id.recConsumo);
 //        imgNext = view.findViewById(R.id.imgConsumoNext);
 //        imgPrevious = view.findViewById(R.id.imgConsumoPrevioius);
         recConsumo.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        recConsumo.setHasFixedSize(true);
+//        recConsumo.setHasFixedSize(true);
         recConsumo.setAdapter(adapter);
-        loadItems();
+//        loadItems();
 //        imgNext.setOnClickListener(v -> loadItems(firstVisible));
 //        imgPrevious.setOnClickListener(v -> loadItems(previousFirstVisible));
         return view;
     }
 
-    private void loadItems() {
-//        if (docToStartAt == null) {
-//            query.limit(5);
-//
-//        } else {
-//            query.startAfter(docToStartAt);
-//            previousFirstVisible = docToStartAt;
-//            imgPrevious.setVisibility(View.VISIBLE);
-//
-//        }
-        query.get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
-            List<CuentaItem> list = new ArrayList<>();
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                list.add(doc.toObject(CuentaItem.class));
-            }
-            adapter.submitList(list);
-//            if (queryDocumentSnapshots.size() < 5) {
-//                imgNext.setVisibility(View.GONE);
-//            } else {
-//                firstVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
-//                imgNext.setVisibility(View.VISIBLE);
+//    private void loadItems() {
+////        if (docToStartAt == null) {
+////            query.limit(5);
+////
+////        } else {
+////            query.startAfter(docToStartAt);
+////            previousFirstVisible = docToStartAt;
+////            imgPrevious.setVisibility(View.VISIBLE);
+////
+////        }
+//        query.get().addOnSuccessListener(App.executor, queryDocumentSnapshots -> {
+//            List<CuentaItem> list = new ArrayList<>();
+//            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+//                list.add(doc.toObject(CuentaItem.class));
 //            }
-        });
+//            adapter.submitList(list);
+////            if (queryDocumentSnapshots.size() < 5) {
+////                imgNext.setVisibility(View.GONE);
+////            } else {
+////                firstVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+////                imgNext.setVisibility(View.VISIBLE);
+////            }
+//        });
+//
+//    }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
 }

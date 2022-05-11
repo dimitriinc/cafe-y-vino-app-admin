@@ -117,6 +117,7 @@
     <string name="usuarios">Usuarios</string>
     <string name="logout">Logout?</string>
     <string name="tip">Tip</string>
+    <string name="propina_title">Monto almacenado</string>
 
 
 </resources>

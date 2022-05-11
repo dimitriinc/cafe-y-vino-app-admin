@@ -15,10 +15,15 @@ import com.cafeyvinowinebar.Administrador.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-public class AdapterConsumo extends ListAdapter<CuentaItem, AdapterConsumo.ViewHolder> {
+public class AdapterConsumo extends FirestoreRecyclerAdapter<CuentaItem, AdapterConsumo.ViewHolder> {
 
-    public AdapterConsumo() {
-        super(DIFF_CALLBACK);
+    public AdapterConsumo(@NonNull FirestoreRecyclerOptions<CuentaItem> options) {
+        super(options);
+    }
+
+    @Override
+    protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull CuentaItem model) {
+        holder.bind(model);
     }
 
     @NonNull
@@ -28,22 +33,18 @@ public class AdapterConsumo extends ListAdapter<CuentaItem, AdapterConsumo.ViewH
         return new ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(getItem(position));
-    }
 
-    private static final DiffUtil.ItemCallback<CuentaItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<CuentaItem>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull CuentaItem oldItem, @NonNull CuentaItem newItem) {
-            return oldItem.getName().equals(newItem.getName());
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull CuentaItem oldItem, @NonNull CuentaItem newItem) {
-            return oldItem.getCount() == newItem.getCount();
-        }
-    };
+//    private static final DiffUtil.ItemCallback<CuentaItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<CuentaItem>() {
+//        @Override
+//        public boolean areItemsTheSame(@NonNull CuentaItem oldItem, @NonNull CuentaItem newItem) {
+//            return oldItem.getName().equals(newItem.getName());
+//        }
+//
+//        @Override
+//        public boolean areContentsTheSame(@NonNull CuentaItem oldItem, @NonNull CuentaItem newItem) {
+//            return oldItem.getCount() == newItem.getCount();
+//        }
+//    };
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 

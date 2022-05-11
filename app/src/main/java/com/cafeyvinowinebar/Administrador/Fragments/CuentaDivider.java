@@ -83,11 +83,29 @@ public class CuentaDivider extends DialogFragment {
 
         fabCriptoOk.setOnClickListener(v -> acceptDivision(edtCripto, Utils.CRIPTO));
 
-        btnTipVisa.setOnClickListener(v -> showTipDialog(Utils.VISA));
+        btnTipVisa.setOnClickListener(v -> {
+            if (propinaVisa == null) {
+                showTipDialog(Utils.VISA);
+            } else {
+                showStoredTipDialog(propinaVisa);
+            }
+        });
 
-        btnTipYape.setOnClickListener(v -> showTipDialog(Utils.YAPE));
+        btnTipYape.setOnClickListener(v -> {
+            if (propinaYape == null) {
+                showTipDialog(Utils.YAPE);
+            } else {
+                showStoredTipDialog(propinaYape);
+            }
+        });
 
-        btnTipCripto.setOnClickListener(v -> showTipDialog(Utils.CRIPTO));
+        btnTipCripto.setOnClickListener(v -> {
+            if (propinaCripto == null) {
+                showTipDialog(Utils.CRIPTO);
+            } else {
+                showStoredTipDialog(propinaCripto);
+            }
+        });
 
         // clears all the values, make the ok text views visible, tip buttons gone, reset the listeners;
         // and admin starts again
@@ -232,5 +250,16 @@ public class CuentaDivider extends DialogFragment {
         });
 
         dialog.show();
+    }
+
+    /**
+     * In case the tip has already been stored, we show how much it is
+     */
+    private void showStoredTipDialog(long propinaMonto) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.propina_title)
+                .setMessage(String.valueOf(propinaMonto))
+                .create()
+                .show();
     }
 }

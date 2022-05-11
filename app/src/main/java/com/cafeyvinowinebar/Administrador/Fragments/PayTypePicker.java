@@ -85,13 +85,22 @@ public class PayTypePicker extends DialogFragment {
     private void getPropina(String payType) {
         switch (payType) {
             case Utils.VISA:
-                propinaVisa = Long.parseLong(edtPropina.getText().toString().trim());
+                String propinaVisaTxt = edtPropina.getText().toString().trim();
+                if (!propinaVisaTxt.isEmpty()) {
+                    propinaVisa = Long.parseLong(propinaVisaTxt);
+                }
                 break;
             case Utils.YAPE:
-                propinaYape = Long.parseLong(edtPropina.getText().toString().trim());
+                String propinaYapeTxt = edtPropina.getText().toString().trim();
+                if (!propinaYapeTxt.isEmpty()) {
+                    propinaYape = Long.parseLong(propinaYapeTxt);
+                }
                 break;
             case Utils.CRIPTO:
-                propinaCripto = Long.parseLong(edtPropina.getText().toString().trim());
+                String propinaCriptoTxt = edtPropina.getText().toString().trim();
+                if (!propinaCriptoTxt.isEmpty()) {
+                    propinaCripto = Long.parseLong(propinaCriptoTxt);
+                }
                 break;
             default:
                 break;
