@@ -81,7 +81,6 @@ public class HistoryActivity extends AppCompatActivity {
             mainHandler.post(() -> {
                 AdapterHistory adapter = new AdapterHistory(HistoryActivity.this);
                 recHistory.setLayoutManager(new LinearLayoutManager(HistoryActivity.this));
-                recHistory.setHasFixedSize(true);
                 recHistory.setAdapter(adapter);
                 adapter.submitList(cuentasCanceladas);
             });

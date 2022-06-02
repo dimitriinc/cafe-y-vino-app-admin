@@ -133,7 +133,6 @@ public class RedactHIstoryActivity extends AppCompatActivity {
             changesAdapter.setItems(changes);
             recChanges.setLayoutManager(new LinearLayoutManager(getBaseContext()));
             recChanges.setAdapter(changesAdapter);
-            recChanges.setHasFixedSize(true);
 
         }
 

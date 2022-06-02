@@ -55,10 +55,11 @@ public class Utils {
     public static final String KEY_PAY_TYPE = "pay_type";
     public static final String KEY_META_ID = "metaDocId";
     public static final String MESA_ID = "mesaID";
+    public static final String ADMIN_TOKEN = "adminToken";
 
     // values
     public static final String TO_CLIENT = "toClient";
-    public static final String TO_ADMIN = "toAdmin";
+    public static final String TO_ADMIN_NEW = "toAdminNew";
     public static final String TODO = "todo";
     public static final String BARRA = "barra";
     public static final String COCINA = "cocina";
@@ -100,8 +101,6 @@ public class Utils {
     public static final String KEY_CONFIRMADO = "confirmado";
     public static final String EDICION = "Edición";
     public static final String ELIMINACION = "Eliminación";
-
-    public static final String[] FIXED_MESAS = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
 
 
     public static String getMessageId() {
