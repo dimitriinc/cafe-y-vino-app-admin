@@ -5,7 +5,7 @@ An Android app for administrators of the restaurant.
 
 ## Functionality
 
-- _Menu managment_ - the menu is stored in the Cloud Firestore. [The client side](https://github.com/dimitriinc/cafe-y-vino-app-client) displays only the products, marked as 'present'. The admin app can update the 'present' field of a product, executing this way the control over what version of the menu is displayed to a customer.
+- _Menu managment_ - the menu is stored in the Cloud Firestore. [The client side](https://github.com/dimitriinc/cafe-y-vino-app-client-kotlin) displays only the products, marked as 'present'. The admin app can update the 'present' field of a product, executing this way the control over what version of the menu is displayed to a customer.
 
 - _Order management_ - all the orders yet to be served are displayed on the screen to admin. Admin can manage the content of an order: change the quantity of a product, delete it, or add a custom product (something that's not on the official menu).
   When an order is served to the table, its products are moved by admin to the bill collection.
@@ -25,7 +25,7 @@ An Android app for administrators of the restaurant.
   In this activity, admin can:
 
   - accept or reject reservation requests,
-  - in case of accepted reservations, admin can mark the reservation as 'arrived', which will open new functionality on the customer side, and send a welcoming FCM message there (i.e. the customer with a reservation doesn't need to send a request to enter (see the functionality of the [customer side](https://github.com/dimitriinc/cafe-y-vino-app-client))),
+  - in case of accepted reservations, admin can mark the reservation as 'arrived', which will open new functionality on the customer side, and send a welcoming FCM message there (i.e. the customer with a reservation doesn't need to send a request to enter (see the functionality of the [customer side](https://github.com/dimitriinc/cafe-y-vino-app-client-kotlin))),
   - create a new reservation (e.g. to store a reservation, that arrived not from the customer side, or to block a certain table from being reserved).
 
 - _User management_ - a list of the customers, present at the moment in the restaurant is displayed; admin can change the number of the table assigned to the customer, send a personalized FCM message to the customer, or change their state to 'not present', removing them from the list.
